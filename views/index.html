@@ -1,73 +1,181 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>LOC Project</title>
-    <!-- link to JavaScript file -->
-    <script src="/script.js" defer></script>
-    <!-- link to CSS file -->
-    <link rel="stylesheet" href="/styles.css" />
-    <!-- link to favcone -->
-    <link rel="icon" type="image/png" href="/images/logo.PNG">
+  <!-- page head: meta, title, cdns, and styles -->
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Green River College | LOC Chair — Learning Outcomes</title>
+
+  <!-- favicon: developer team icon -->
+<link rel="icon" type="image/png" href="/images/logo.PNG" />
+
+  <!-- cdns: jquery + datatables -->
+  <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+  <link rel="stylesheet" href="https://cdn.datatables.net/2.3.4/css/dataTables.dataTables.min.css" />
+  <script src="https://cdn.datatables.net/2.3.4/js/dataTables.min.js"></script>
+
+  <!-- app styles -->
+  <link rel="stylesheet" href="/styles.css" />
+  <link rel="stylesheet" href="/left-panel/left-panel.css" />
+  <link rel="stylesheet" href="/cards/cards.css" />
+  <link rel="stylesheet" href="/right-panel/right-panel.css" />
+  <link rel="stylesheet" href="/search/search.css" />
+  <link rel="stylesheet" href="/view-archives/view-archives.css" />
 </head>
 
 <body>
-    <header class="header">
-        <h1>Division Management</h1>
-        <p class="sub">Learning Outcomes Committee</p>
-    </header>
+  <!-- header: brand, search, sign in -->
+  <header class="user-header">
+      <div class="navbar">
+      <div class="brand">
+        <h1 class="brand__title">Green River College</h1>
+      </div>
 
-    <main class="container">
-        <section class="card">
-            <label for="divisionSelect" class="label">Select a Division</label>
-            <select id="divisionSelect" class="select">
-        <option value="">-- Choose a division --</option>
-      </select>
+      <div class="header-search">
+        <input id="global-search" type="search" placeholder="Search divisions, programs, contacts..." />
+      </div>
+
+      <a class="btn btn--ghost" id="history-link" href="/history.html">History</a>
+      <button class="btn btn--accent" id="sign-in-btn">Sign In</button>
+    </div>
+
+  </header>
+
+  <!-- layout: left | main | right example data for now-->
+  <main class="page-layout">
+
+    <!-- left panel: divisions quick links -->
+    <aside class="left-panel">
+      <h2>Divisions</h2>
+      <div class="lp-body">
+        <ul class="division-list">
+          <li>Science</li>
+          <li>Technology</li>
+          <li>Business</li>
+          <li>Health</li>
+          <li>Fine Arts</li>
+          <li>Humanities</li>
+          <li>Social Science</li>
+          <li>Trades</li>
+          <li>Education</li>
+        </ul>
+      </div>
+    </aside>
+
+    <!-- main column: dashboard cards then archives -->
+    <section class="main-content" id="main-content">
+      <!-- dashboard: 2 rows of cards then scroll -->
+      <div class="main-top" id="main-top">
+        <h2>Dashboard</h2>
+        <div class="cards-wrap" id="cards-wrap">
+          <div class="cards-grid">
+            <div class="card">Science</div>
+            <div class="card">Technology</div>
+            <div class="card">Business</div>
+            <div class="card">Health</div>
+            <div class="card">Fine Arts</div>
+            <div class="card">Humanities</div>
+            <div class="card">Social Science</div>
+            <div class="card">Trades</div>
+            <div class="card">Education</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- archives: collapsible table under the cards -->
+      <div class="main-bottom" id="main-bottom">
+        <section class="archives-section collapsed" id="archives-section">
+          <div class="archives-head">
+            <h2 class="archives-title">View Archives</h2>
+            <button class="archives-toggle" id="archives-toggle" aria-expanded="false" aria-controls="archives-body">⮝</button>
+          </div>
+
+          <div class="archives-body" id="archives-body">
+            <table class="archives-table" id="archives-table">
+              <thead>
+                <tr>
+                  <th>School Year</th>
+                  <th>Changes</th>
+                  <th>Dean</th>
+                  <th>Chair</th>
+                  <th>LOC Rep</th>
+                  <th>PEN Contact</th>
+                  <th>Division</th>
+                  <th>View</th>
+                  <th>Download</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>2025-2026</td>
+                  <td>4</td>
+                  <td>Dr. Alicia Barnes</td>
+                  <td>Michael Turner</td>
+                  <td>Sarah Johnson</td>
+                  <td>David Kim</td>
+                  <td>Science</td>
+                  <td><a href="#">View</a></td>
+                  <td><a href="#">Download</a></td>
+                </tr>
+                <tr>
+                  <td>2024-2025</td>
+                  <td>7</td>
+                  <td>Dr. Henry Cole</td>
+                  <td>Rebecca Shaw</td>
+                  <td>Jonathan Lee</td>
+                  <td>Maria Lopez</td>
+                  <td>Mathematics</td>
+                  <td><a href="#">View</a></td>
+                  <td><a href="#">Download</a></td>
+                </tr>
+                <tr>
+                  <td>2023-2024</td>
+                  <td>2</td>
+                  <td>Dr. Olivia Reyes</td>
+                  <td>Christopher Davis</td>
+                  <td>Emily Clark</td>
+                  <td>Samuel Wright</td>
+                  <td>Technology</td>
+                  <td><a href="#">View</a></td>
+                  <td><a href="#">Download</a></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
         </section>
+      </div>
+    </section>
 
-        <form id="divisionForm" class="card hidden">
-            <h2 class="card-title">Division Details</h2>
+    <!-- right panel: recent changes timeline -->
+    <aside class="right-panel">
+      <h2>Recent Changes</h2>
+      <div class="rp-body">
+        <ul class="change-list">
+          <li>
+            <strong>Chair:</strong> <span class="to">Dr. Sarah Mitchell</span>
+            <span class="when">2 hours ago by <span class="by">Joel</span></span>
+          </li>
+          <li>
+            <strong>PEN Contact:</strong> <span class="to">Jennifer Rodriguez</span>
+            <span class="when">Yesterday by <span class="by">Vincent</span></span>
+          </li>
+          <li>
+            <strong>Dean:</strong> <span class="to">Dr. Robert Chen</span>
+            <span class="when">3 days ago by <span class="by">Arthur</span></span>
+          </li>
+        </ul>
+      </div>
+    </aside>
 
-            <div class="field">
-                <label for="divisionName">Division Name</label>
-                <input id="divisionName" type="text" />
-                <span id="err-divisionName" class="error hidden">Required</span>
-            </div>
+    <!-- floating toggle: opens and closes the right panel -->
+    <button class="toggle-btn" id="toggle-right" aria-label="Toggle right panel">⮜</button>
+  </main>
 
-            <div class="field">
-                <label for="dean">Dean</label>
-                <input id="dean" type="text" />
-                <span id="err-dean" class="error hidden">Required</span>
-            </div>
-
-            <div class="field">
-                <label for="penContact">PEN Contact</label>
-                <input id="penContact" type="text" />
-                <span id="err-penContact" class="error hidden">Required</span>
-            </div>
-
-            <div class="field">
-                <label for="locRep">LOC Rep</label>
-                <input id="locRep" type="text" />
-                <span id="err-locRep" class="error hidden">Required</span>
-            </div>
-
-            <div class="field">
-                <label for="chair">Chair</label>
-                <input id="chair" type="text" />
-                <span id="err-chair" class="error hidden">Required</span>
-            </div>
-
-            <div class="buttons">
-                <button type="submit" class="btn primary">Save</button>
-                <button type="button" id="cancelBtn" class="btn">Cancel</button>
-            </div>
-
-            <p id="saveMsg" class="save-msg hidden">Saved ✓</p>
-        </form>
-    </main>
+  <!-- scripts linking -->
+  <script src="/script.js"></script>
+  <script src="/left-panel/left-panel.js"></script>
+  <script src="/cards/cards.js"></script>
+  <script src="/search/search.js"></script>
+  <script src="/view-archives/view-archives.js"></script>
 </body>
-
 </html>

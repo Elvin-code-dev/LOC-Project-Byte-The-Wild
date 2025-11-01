@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <!-- page head: meta, title, cdns, and styles -->
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>LOC Version History — Green River College</title>
+  <link rel="icon" type="image/png" href="/images/logo.PNG" />
+
+  <!-- cdns importing and ect  -->
+  <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+  <link rel="stylesheet" href="https://cdn.datatables.net/2.3.4/css/dataTables.dataTables.min.css" />
+  <script src="https://cdn.datatables.net/2.3.4/js/dataTables.min.js"></script>
+
+  <!-- app styles -->
+  <link rel="stylesheet" href="/styles.css" />
+  <link rel="stylesheet" href="/search/search.css" />
+</head>
+<body>
+  <!-- header: reuse navbar -->
+  <header class="user-header">
+    <div class="navbar">
+      <div class="brand">
+        <h1 class="brand__title">Green River College</h1>
+      </div>
+      <div class="header-search">
+        <input id="global-search" type="search" placeholder="Search versions, programs, contacts..." />
+      </div>
+      <a class="btn btn--ghost" href="/">Dashboard</a>
+      <button class="btn btn--accent" id="sign-in-btn">Sign In</button>
+    </div>
+  </header>
+
+  <!-- page body: placeholder for future version timeline/table  or what ever we plan to do -->
+  <main class="page-layout" style="grid-template-columns: 1fr;">
+    <section class="main-content">
+      <h2>Version History</h2>
+
+      <div class="archives-section">
+        <div class="archives-head">
+          <h3 class="archives-title">All Changes (coming soon)</h3>
+        </div>
+        <div class="archives-body">
+          <p>We’ll list yearly snapshots and detailed change logs here.</p>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- app scripts  -->
+  <script src="/search/search.js"></script>
+</body>
+</html>

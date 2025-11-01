@@ -1,0 +1,73 @@
+/* left-panel.css — styles only for the left panel list */
+
+/* Panel width and surface */
+.left-panel {
+  inline-size: 260px;
+  background: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 1px 6px rgba(0,0,0,.08);
+  padding: 14px;
+}
+
+/* Scroll area */
+.lp-body,
+.left-panel .division-list {
+  max-block-size: calc(100vh - 130px);
+  overflow: auto;
+  margin: 0;
+  padding: 0;
+}
+
+/* List and items */
+.left-panel .division-list {
+  list-style: none;
+  display: grid;
+  gap: 8px;
+}
+
+.left-panel .division-list li {
+  position: relative;
+  padding: 10px 12px 10px 14px;
+  border-radius: 10px;
+  border: 1px solid rgba(0,0,0,.06);
+  background: linear-gradient(180deg, #fff, #fafafa);
+  color: #1d2b1d;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background .18s ease, box-shadow .18s ease, border-color .18s ease, transform .18s ease;
+}
+
+/* Hover/focus */
+.left-panel .division-list li:hover,
+.left-panel .division-list li:focus-visible {
+  background: #fff;
+  box-shadow: 0 8px 26px rgba(0,0,0,.10);
+  border-color: rgba(42,162,58,.25);
+  transform: translateY(-2px);
+  outline: none;
+}
+
+/* Active state */
+.left-panel .division-list li.active {
+  border-color: rgba(44,136,43,.45);
+  box-shadow: 0 0 0 3px rgba(44,136,43,.18);
+  background: #ffffff;
+}
+
+/* Left edge indicator */
+.left-panel .division-list li::before {
+  content: "";
+  position: absolute;
+  left: 6px; top: 10px; bottom: 10px;
+  width: 3px;
+  border-radius: 3px;
+  background: transparent;
+  transition: background .18s ease, opacity .18s ease;
+}
+.left-panel .division-list li:hover::before { background: rgba(44,136,43,.35); }
+.left-panel .division-list li.active::before { background: var(--primary); }
+
+/* Small screens */
+@media (max-width: 900px) {
+  .left-panel { inline-size: auto; }
+}

@@ -1,139 +1,95 @@
-// stores all division info loaded from the JSON file
-let divisionsData = {}; 
-// keeps track of the division name that is currently selected
-let currentKey = "";    
+/* script.js - main layout, right panel toggle, simple sizing */
 
-// loads the data from divisions.json file
-async function loadData() {
-  const response = await fetch("divisions.json");
-  divisionsData = await response.json();
+/* make side panels scroll inside and not be too tall */
+function fitSidePanels() {
+  const rightPanel = document.querySelector('.right-panel');
+  const leftPanel = document.querySelector('.left-panel');
+
+  const maxHeight = Math.max(320, window.innerHeight - 130);
+
+  // Right panel body
+  if (rightPanel) {
+    const rightPanelBody = rightPanel.querySelector('.rp-body') || rightPanel;
+    rightPanelBody.style.maxHeight = maxHeight + 'px';
+    rightPanelBody.style.overflowY = 'auto';
+  }
+
+  // Left panel body
+  if (leftPanel) {
+    const leftPanelBody = leftPanel.querySelector('.lp-body') || leftPanel;
+    leftPanelBody.style.maxHeight = maxHeight + 'px';
+    leftPanelBody.style.overflowY = 'auto';
+  }
 }
 
-// save changes into localStorage so they stay after refresh for testing purposes for now!
-function saveLocal() {
-  localStorage.setItem("divisionsData", JSON.stringify(divisionsData));
+/* keep the cards container at exactly two rows and scroll for more hard to do had help */
+function fitCardsTwoRows() {
+  const cardsContainer = document.getElementById('cards-wrap');
+  if (!cardsContainer) return;
+
+  const cardsGrid = cardsContainer.querySelector('.cards-grid');
+  if (!cardsGrid) return;
+
+  const firstCard = cardsGrid.querySelector('.card');
+  if (!firstCard) return;
+
+  const cardHeight = firstCard.getBoundingClientRect().height || 160;
+  const gridStyle = getComputedStyle(cardsGrid);
+  const rowGap = parseInt(gridStyle.gap || '16', 10);
+
+  const twoRowsHeight = (cardHeight * 2) + rowGap + 8;
+
+  const containerTopOffset = cardsContainer.getBoundingClientRect().top;
+  const availableSpace = Math.max(
+    260,
+    Math.min(twoRowsHeight, window.innerHeight - containerTopOffset - 24)
+  );
+
+  cardsContainer.style.height = availableSpace + 'px';
+  cardsContainer.style.maxHeight = availableSpace + 'px';
+  cardsContainer.style.overflowY = 'auto';
+  cardsContainer.style.overflowX = 'hidden';
 }
 
-// add all division names into the dropdown list
-function fillSelect() {
-  const select = document.getElementById("divisionSelect");
-  const names = Object.keys(divisionsData);
-  names.forEach(name => {
-    const opt = document.createElement("option");
-    opt.value = name;
-    opt.textContent = name;
-    select.appendChild(opt);
-  });
+/* open or close the right panel */
+function toggleRightPanel() {
+  const rightPanel = document.querySelector('.right-panel');
+  const pageBody = document.body;
+  if (!rightPanel) return;
+
+  rightPanel.classList.toggle('is-collapsed');
+  pageBody.classList.toggle('rp-collapsed');
+
+  // refit layout after the small CSS transition
+  setTimeout(() => {
+    fitSidePanels();
+    fitCardsTwoRows();
+  }, 180);
 }
 
-// show the form with info for the selected division
-function showFormFor(name) {
-  const form = document.getElementById("divisionForm");
-  const record = divisionsData[name];
-  currentKey = name; // this saves which division is being worked on
-
-  document.getElementById("divisionName").value = record.divisionName || "";
-  document.getElementById("dean").value = record.dean || "";
-  document.getElementById("penContact").value = record.penContact || "";
-  document.getElementById("locRep").value = record.locRep || "";
-  document.getElementById("chair").value = record.chair || "";
-
-  clearErrors();
-  hideSaveMsg();
-  form.classList.remove("hidden");
+/* Adjust layout on resize or orientation changes */
+function handleResizeOrRotate() {
+  fitSidePanels();
+  fitCardsTwoRows();
 }
 
-// and here i hide the whole form when cancel is clicked
-function hideForm() {
-  document.getElementById("divisionForm").classList.add("hidden");
-  clearErrors();
-  hideSaveMsg();
+/* start everything */
+function startMain() {
+  const toggleRightButton = document.getElementById('toggle-right');
+  if (toggleRightButton) {
+    toggleRightButton.addEventListener('click', toggleRightPanel);
+  }
+
+  window.addEventListener('resize', handleResizeOrRotate);
+  window.addEventListener('orientationchange', handleResizeOrRotate);
+
+  fitSidePanels();
+  fitCardsTwoRows();
 }
 
-// show one error message
-function showError(id) {
-  document.getElementById(`err-${id}`).classList.remove("hidden");
+/* Boot when ready */
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', startMain);
+} else {
+  startMain();
 }
-
-// hide that  one error message
-function hideError(id) {
-  document.getElementById(`err-${id}`).classList.add("hidden");
-}
-
-// hide all error messages
-function clearErrors() {
-  ["divisionName", "dean", "penContact", "locRep", "chair"].forEach(hideError);
-}
-
-// hide the "Saved! " message
-function hideSaveMsg() {
-  document.getElementById("saveMsg").classList.add("hidden");
-}
-
-// check that all fields have text before saving
-function validate() {
-  let ok = true;
-  ["divisionName", "dean", "penContact", "locRep", "chair"].forEach(id => {
-    const val = document.getElementById(id).value.trim();
-    if (!val) {
-      showError(id);
-      ok = false;
-    }
-  });
-  return ok;
-}
-
-// hide the error as soon as user types something
-function setupLiveValidation() {
-  ["divisionName", "dean", "penContact", "locRep", "chair"].forEach(id => {
-    const input = document.getElementById(id);
-    input.addEventListener("input", () => {
-      if (input.value.trim()) hideError(id);
-    });
-  });
-}
-
-// here i set up all event listeners
-function setupEvents() {
-  // when user changes dropdown
-  document.getElementById("divisionSelect").addEventListener("change", e => {
-    const key = e.target.value;
-    if (!key) {
-      hideForm();
-      return;
-    }
-    showFormFor(key);
-  });
-
-  // when user clicks Save
-  document.getElementById("divisionForm").addEventListener("submit", e => {
-    e.preventDefault();
-    clearErrors();
-    hideSaveMsg();
-
-    if (!validate()) return;
-
-    // update data for the current divisions
-    divisionsData[currentKey] = {
-      divisionName: document.getElementById("divisionName").value.trim(),
-      dean: document.getElementById("dean").value.trim(),
-      penContact: document.getElementById("penContact").value.trim(),
-      locRep: document.getElementById("locRep").value.trim(),
-      chair: document.getElementById("chair").value.trim()
-    };
-
-    saveLocal();
-    document.getElementById("saveMsg").classList.remove("hidden");
-  });
-
-  // when the user clicks cancel
-  document.getElementById("cancelBtn").addEventListener("click", hideForm);
-}
-
-// run everything when page loads
-(async function init() {
-  await loadData();
-  fillSelect();
-  setupEvents();
-  setupLiveValidation();
-})();

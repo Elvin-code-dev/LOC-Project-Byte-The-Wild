@@ -1,0 +1,150 @@
+/* right-panel.css — clean professional look */
+
+/* Panel container */
+.right-panel {
+  inline-size: 340px;
+  background: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 4px 18px rgba(0, 0, 0, 0.08);
+  padding: 16px 18px;
+  border: 1px solid #e2eee2;
+  overflow: hidden;
+  transition: all 0.25s ease;
+}
+
+/* Collapsed (hidden) state */
+.right-panel.is-collapsed {
+  inline-size: 0;
+  opacity: 0;
+  transform: translateX(8px);
+  padding: 0;
+  margin: 0;
+  border: 0;
+  pointer-events: none;
+}
+
+/* Title */
+.right-panel h2 {
+  margin: 0 0 14px;
+  font-weight: 800;
+  color: var(--primary);
+  font-size: 1.2rem;
+  letter-spacing: 0.2px;
+  border-bottom: 2px solid rgba(45, 138, 49, 0.25);
+  padding-bottom: 6px;
+}
+
+/* Timeline list */
+.change-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  position: relative;
+}
+
+/* vertical line on the left */
+.change-list::before {
+  content: "";
+  position: absolute;
+  left: 8px;
+  top: 4px;
+  bottom: 4px;
+  width: 2px;
+  background: rgba(45, 138, 49, 0.25);
+  border-radius: 2px;
+}
+
+/* each item */
+.change-list li {
+  position: relative;
+  background: linear-gradient(180deg, #f9fbf9, #f3f9f4);
+  border-radius: 10px;
+  padding: 10px 12px 10px 26px;
+  border: 1px solid rgba(45, 138, 49, 0.15);
+  box-shadow: 0 1px 6px rgba(0, 0, 0, 0.04);
+  transition: transform 0.15s ease, box-shadow 0.18s ease;
+}
+
+/* bullet circle */
+.change-list li::before {
+  content: "";
+  position: absolute;
+  left: 4px;
+  top: 14px;
+  width: 8px;
+  height: 8px;
+  background: var(--primary);
+  border-radius: 50%;
+  box-shadow: 0 0 0 3px rgba(45, 138, 49, 0.15);
+}
+
+/* hover effect */
+.change-list li:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+  background: #ffffff;
+}
+
+/* Role label */
+.change-list strong {
+  display: inline-block;
+  font-weight: 700;
+  color: var(--primary);
+  min-width: 90px;
+}
+
+/* new value (to) */
+.change-list .to {
+  font-weight: 600;
+  color: #1f2d1f;
+}
+
+/* time info */
+.change-list .when {
+  display: block;
+  margin-top: 4px;
+  font-size: 0.85rem;
+  color: #6b786b;
+}
+.change-list .when .by {
+  font-weight: 600;
+  color: #2d8a31;
+}
+
+/* Scroll container */
+.rp-body {
+  max-block-size: calc(100vh - 140px);
+  overflow-y: auto;
+  padding-right: 4px;
+}
+
+/* small scrollbar */
+.rp-body::-webkit-scrollbar { width: 6px; }
+.rp-body::-webkit-scrollbar-thumb {
+  background: rgba(45, 138, 49, 0.3);
+  border-radius: 3px;
+}
+.rp-body::-webkit-scrollbar-thumb:hover {
+  background: rgba(45, 138, 49, 0.45);
+}
+
+/* Mobile behavior */
+@media (max-width: 900px) {
+  .right-panel {
+    position: fixed;
+    right: 0;
+    top: 64px;
+    bottom: 0;
+    width: min(92vw, 340px);
+    z-index: 30;
+  }
+
+  .right-panel.is-collapsed {
+    transform: translateX(100%);
+    opacity: 0;
+    pointer-events: none;
+  }
+}
