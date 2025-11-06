@@ -1,0 +1,320 @@
+[
+  {
+    "divisionName": "Business, Law, and Education",
+    "deanName": "Lea Ann Simpson",
+    "penContact": "Mary Singer",
+    "locRep": "Jane Swenson",
+    "chairName": "Lea Ann Simpson",
+    "programList": [
+      {
+        "programName": "Accounting",
+        "payees": [],
+        "hasBeenPaid": false,
+        "reportSubmitted": false,
+        "notes": "Initial Invite Sent from Julie 9/26/24. Follow up on 10/21"
+      },
+      {
+        "programName": "Business Management",
+        "payees": [],
+        "hasBeenPaid": false,
+        "reportSubmitted": false,
+        "notes": "Initial Invite Sent from Julie 9/26/24. Follow up on 10/21"
+      },
+      {
+        "programName": "Business Marketing/Entrepreneurship",
+        "payees": [],
+        "hasBeenPaid": false,
+        "reportSubmitted": false,
+        "notes": "Initial Invite Sent from Julie 9/26/24. Follow up on 10/21"
+      }
+    ]
+  },
+  {
+    "divisionName": "English",
+    "deanName": "Jamie Fitzgerald",
+    "penContact": "Liz Peterson",
+    "locRep": "Jake Frye",
+    "chairName": "Ian Sherman",
+    "programList": [
+      {
+        "programName": "English",
+        "payees": [
+          {
+            "name": "Aley Martin",
+            "amount": 175.0
+          },
+          {
+            "name": "Claire Salcedo",
+            "amount": 175.0
+          },
+          {
+            "name": "Ericka Nelson",
+            "amount": 175.0
+          },
+          {
+            "name": "Jake",
+            "amount": 475.0
+          }
+        ],
+        "hasBeenPaid": false,
+        "reportSubmitted": false,
+        "notes": "Yes! See notes on adjuncts to pay. Will submit report next year 2025-2026"
+      }
+    ]
+  },
+  {
+    "divisionName": "Fine Arts",
+    "deanName": "Christie Gilliland",
+    "penContact": "Liz Peterson",
+    "locRep": "Monica Bowen",
+    "chairName": "Paul Metevier",
+    "programList": [
+      {
+        "programName": "Music",
+        "payees": [
+          {
+            "name": "Sam",
+            "amount": 333.0
+          },
+          {
+            "name": "Kelly =  = $333",
+            "amount": 0.0
+          },
+          {
+            "name": "Ruth",
+            "amount": 333.0
+          }
+        ],
+        "hasBeenPaid": false,
+        "reportSubmitted": false,
+        "notes": "Yes! Sam, Kelly, and Ruth all work on this together and divide the money three ways."
+      }
+    ]
+  },
+  {
+    "divisionName": "Health Science",
+    "deanName": "Lionel Candido Flores",
+    "penContact": "Angie Brenner",
+    "locRep": "Thom Jackson",
+    "chairName": "Leslie Kessler",
+    "programList": [
+      {
+        "programName": "Physical Therapist Assistant",
+        "payees": [
+          {
+            "name": "Pam Kikillus",
+            "amount": 500.0
+          },
+          {
+            "name": "Anna Neil",
+            "amount": 500.0
+          }
+        ],
+        "hasBeenPaid": false,
+        "reportSubmitted": true,
+        "notes": "Yes! Pam and Anna will do this"
+      },
+      {
+        "programName": "Practical Nursing",
+        "payees": [],
+        "hasBeenPaid": false,
+        "reportSubmitted": false,
+        "notes": "Not this time around"
+      }
+    ]
+  },
+  {
+    "divisionName": "Humanities",
+    "deanName": "Jamie Fitzgerald",
+    "penContact": "Liz Peterson",
+    "locRep": "Lisa Luengo",
+    "chairName": "Katie Cunnion",
+    "programList": [
+      {
+        "programName": "Communication Studies",
+        "payees": [],
+        "hasBeenPaid": false,
+        "reportSubmitted": false,
+        "notes": "No"
+      }
+    ]
+  },
+  {
+    "divisionName": "Science",
+    "deanName": "Miebeth Bustillo-Booth",
+    "penContact": "Heather Lambert",
+    "locRep": "Nicole Feider",
+    "chairName": "Katy Shaw and Danny Najera",
+    "programList": [
+      {
+        "programName": "Anatomy and Physiology",
+        "payees": [],
+        "hasBeenPaid": false,
+        "reportSubmitted": false,
+        "notes": "Initial Invite Sent from Julie 9/26/24. Follow up on 10/21"
+      },
+      {
+        "programName": "Biology/Environmental Science",
+        "payees": [
+          {
+            "name": "$334.00 - Leo Studach\n$333.00 - Stephanie Hoffman\n$333.00 - Danny Najera",
+            "amount": 0.0
+          }
+        ],
+        "hasBeenPaid": false,
+        "reportSubmitted": false,
+        "notes": "Yes, they are doing a 2-year project with majors level Bio classes"
+      },
+      {
+        "programName": "Geology/Oceanography",
+        "payees": [],
+        "hasBeenPaid": false,
+        "reportSubmitted": false,
+        "notes": "Initial Invite Sent from Julie 9/26/24. Follow up on 10/21 and 11/20"
+      }
+    ]
+  },
+  {
+    "divisionName": "Social Science",
+    "deanName": "Christie Gilliland",
+    "penContact": "Liz Peterson",
+    "locRep": "Joy Crawford",
+    "chairName": "Mark Thomason",
+    "programList": [
+      {
+        "programName": "Anthropology",
+        "payees": [
+          {
+            "name": "Madeleine",
+            "amount": 500.0
+          },
+          {
+            "name": "Joy Crawford",
+            "amount": 500.0
+          }
+        ],
+        "hasBeenPaid": false,
+        "reportSubmitted": false,
+        "notes": "Yes! Joy and Madeleine (Madeleine gets paid, Joy is a mentor)"
+      },
+      {
+        "programName": "History",
+        "payees": [],
+        "hasBeenPaid": false,
+        "reportSubmitted": false,
+        "notes": "No for this round"
+      },
+      {
+        "programName": "Political Science",
+        "payees": [
+          {
+            "name": "Lindsey",
+            "amount": 500.0
+          },
+          {
+            "name": "Yoav",
+            "amount": 500.0
+          }
+        ],
+        "hasBeenPaid": false,
+        "reportSubmitted": true,
+        "notes": "Yes! Lindsey Smith and Yoav will do a project"
+      },
+      {
+        "programName": "Psychology",
+        "payees": [
+          {
+            "name": "Joy",
+            "amount": 500.0
+          },
+          {
+            "name": "Jerry",
+            "amount": 500.0
+          }
+        ],
+        "hasBeenPaid": false,
+        "reportSubmitted": true,
+        "notes": "Yes! Joy and Jerry will do a project together"
+      }
+    ]
+  },
+  {
+    "divisionName": "Technology",
+    "deanName": "Lea Ann Simpson",
+    "penContact": "Angie Brenner",
+    "locRep": "Josh Archer",
+    "chairName": "Michael Wood",
+    "programList": [
+      {
+        "programName": "Aviation",
+        "payees": [
+          {
+            "name": "Tad Henry",
+            "amount": 1000.0
+          }
+        ],
+        "hasBeenPaid": false,
+        "reportSubmitted": false,
+        "notes": "Yes! Tad Henry is taking this on"
+      },
+      {
+        "programName": "CAD Design and Engineering Tech.",
+        "payees": [
+          {
+            "name": "Seunghye Jang",
+            "amount": 1000.0
+          }
+        ],
+        "hasBeenPaid": false,
+        "reportSubmitted": true,
+        "notes": "Yes! Seunghye Jeng"
+      },
+      {
+        "programName": "Natural Resources",
+        "payees": [],
+        "hasBeenPaid": false,
+        "reportSubmitted": false,
+        "notes": "Can't this year due to so many faculty in their department in the tenure process."
+      }
+    ]
+  },
+  {
+    "divisionName": "Trades",
+    "deanName": "Lea Ann Simpson",
+    "penContact": "Mary Singer",
+    "locRep": "Ben Orr",
+    "chairName": "David Lewis",
+    "programList": [
+      {
+        "programName": "Automotive Technology",
+        "payees": [],
+        "hasBeenPaid": false,
+        "reportSubmitted": false,
+        "notes": "Initial Invite Sent from Julie 9/26/24. Follow up on 10/21"
+      },
+      {
+        "programName": "Manufacturing",
+        "payees": [],
+        "hasBeenPaid": false,
+        "reportSubmitted": false,
+        "notes": "Yes! The Manufacturing program (Bradley Chin - lead) will participate in the Program Outcomes Assessment this year"
+      }
+    ]
+  },
+  {
+    "divisionName": "Transitional Studies",
+    "deanName": "Lionel Candido Flores",
+    "penContact": "Mary Singer",
+    "locRep": "Thom Jackson",
+    "chairName": "David Lewis",
+    "programList": [
+      {
+        "programName": "Health and Physical Education",
+        "payees": [],
+        "hasBeenPaid": false,
+        "reportSubmitted": false,
+        "notes": "Not this time around"
+      }
+    ]
+  }
+]

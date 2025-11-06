@@ -1,181 +1,217 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <!-- page head: meta, title, cdns, and styles -->
+  <!-- meta -->
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Green River College | LOC Chair — Learning Outcomes</title>
 
-  <!-- favicon: developer team icon -->
-<link rel="icon" type="image/png" href="/images/logo.PNG" />
+  <!-- icon -->
+  <link rel="icon" type="image/png" href="/images/logo.PNG" />
 
-  <!-- cdns: jquery + datatables -->
+  <!-- cdns -->
   <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
   <link rel="stylesheet" href="https://cdn.datatables.net/2.3.4/css/dataTables.dataTables.min.css" />
   <script src="https://cdn.datatables.net/2.3.4/js/dataTables.min.js"></script>
+  <link rel="stylesheet" href="https://cdn.datatables.net/responsive/2.5.1/css/responsive.dataTables.min.css" />
+  <script src="https://cdn.datatables.net/responsive/2.5.1/js/dataTables.responsive.min.js"></script>
 
-  <!-- app styles -->
+
+  <!-- styles -->
   <link rel="stylesheet" href="/styles.css" />
   <link rel="stylesheet" href="/left-panel/left-panel.css" />
   <link rel="stylesheet" href="/cards/cards.css" />
   <link rel="stylesheet" href="/right-panel/right-panel.css" />
   <link rel="stylesheet" href="/search/search.css" />
   <link rel="stylesheet" href="/view-archives/view-archives.css" />
+  <link rel="stylesheet" href="/edit/edit.css" />
 </head>
 
 <body>
-  <!-- header: brand, search, sign in -->
+  <!-- header -->
   <header class="user-header">
-      <div class="navbar">
+    <div class="navbar">
       <div class="brand">
         <h1 class="brand__title">Green River College</h1>
       </div>
-
       <div class="header-search">
         <input id="global-search" type="search" placeholder="Search divisions, programs, contacts..." />
       </div>
-
       <a class="btn btn--ghost" id="history-link" href="/history.html">History</a>
-      <button class="btn btn--accent" id="sign-in-btn">Sign In</button>
+      <button class="btn btn--accent" id="view-final-btn" type="button">View Final</button>
     </div>
-
   </header>
 
-  <!-- layout: left | main | right example data for now-->
+  <!-- layout -->
   <main class="page-layout">
-
-    <!-- left panel: divisions quick links -->
+    <!-- left panel -->
     <aside class="left-panel">
       <h2>Divisions</h2>
       <div class="lp-body">
-        <ul class="division-list">
-          <li>Science</li>
-          <li>Technology</li>
-          <li>Business</li>
-          <li>Health</li>
-          <li>Fine Arts</li>
-          <li>Humanities</li>
-          <li>Social Science</li>
-          <li>Trades</li>
-          <li>Education</li>
+        <ul class="division-list" id="division-list">
+          <li class="division-item" data-division-id="Science">Science</li>
+          <li class="division-item" data-division-id="Technology">Technology</li>
+          <li class="division-item" data-division-id="Business">Business</li>
+          <li class="division-item" data-division-id="Health">Health</li>
+          <li class="division-item" data-division-id="Fine Arts">Fine Arts</li>
+          <li class="division-item" data-division-id="Humanities">Humanities</li>
+          <li class="division-item" data-division-id="Social Science">Social Science</li>
+          <li class="division-item" data-division-id="Trades">Trades</li>
+          <li class="division-item" data-division-id="Education">Education</li>
         </ul>
       </div>
     </aside>
 
-    <!-- main column: dashboard cards then archives -->
+    <!-- main content -->
     <section class="main-content" id="main-content">
-      <!-- dashboard: 2 rows of cards then scroll -->
-      <div class="main-top" id="main-top">
-        <h2>Dashboard</h2>
-        <div class="cards-wrap" id="cards-wrap">
-          <div class="cards-grid">
-            <div class="card">Science</div>
-            <div class="card">Technology</div>
-            <div class="card">Business</div>
-            <div class="card">Health</div>
-            <div class="card">Fine Arts</div>
-            <div class="card">Humanities</div>
-            <div class="card">Social Science</div>
-            <div class="card">Trades</div>
-            <div class="card">Education</div>
-          </div>
+      <h2>Dashboard</h2>
+
+      <!-- cards -->
+      <div class="cards-wrap" id="cards-wrap">
+        <div class="cards-grid" id="cards-grid">
+          <div class="card" data-division-id="Science"><span class="card-title">Science</span></div>
+          <div class="card" data-division-id="Technology"><span class="card-title">Technology</span></div>
+          <div class="card" data-division-id="Business"><span class="card-title">Business</span></div>
+          <div class="card" data-division-id="Health"><span class="card-title">Health</span></div>
+          <div class="card" data-division-id="Fine Arts"><span class="card-title">Fine Arts</span></div>
+          <div class="card" data-division-id="Humanities"><span class="card-title">Humanities</span></div>
+          <div class="card" data-division-id="Social Science"><span class="card-title">Social Science</span></div>
+          <div class="card" data-division-id="Trades"><span class="card-title">Trades</span></div>
+          <div class="card" data-division-id="Education"><span class="card-title">Education</span></div>
         </div>
       </div>
 
-      <!-- archives: collapsible table under the cards -->
-      <div class="main-bottom" id="main-bottom">
-        <section class="archives-section collapsed" id="archives-section">
-          <div class="archives-head">
-            <h2 class="archives-title">View Archives</h2>
-            <button class="archives-toggle" id="archives-toggle" aria-expanded="false" aria-controls="archives-body">⮝</button>
+      <!-- inline editor -->
+      <section id="division-detail" style="display:none; margin-top:14px;">
+        <h2 class="edit-title">
+          Edit Division
+          <span class="badge" id="badgeName"></span>
+        </h2>
+
+        <!-- required by edit.js -->
+        <input type="hidden" id="divisionId" />
+
+        <div class="edit-grid">
+          <div class="edit-field">
+            <label for="divisionName">Division Name</label>
+            <input id="divisionName" type="text" placeholder="Division name" />
+            <div class="error" data-error-for="divisionName"></div>
           </div>
 
-          <div class="archives-body" id="archives-body">
-            <table class="archives-table" id="archives-table">
-              <thead>
-                <tr>
-                  <th>School Year</th>
-                  <th>Changes</th>
-                  <th>Dean</th>
-                  <th>Chair</th>
-                  <th>LOC Rep</th>
-                  <th>PEN Contact</th>
-                  <th>Division</th>
-                  <th>View</th>
-                  <th>Download</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td>2025-2026</td>
-                  <td>4</td>
-                  <td>Dr. Alicia Barnes</td>
-                  <td>Michael Turner</td>
-                  <td>Sarah Johnson</td>
-                  <td>David Kim</td>
-                  <td>Science</td>
-                  <td><a href="#">View</a></td>
-                  <td><a href="#">Download</a></td>
-                </tr>
-                <tr>
-                  <td>2024-2025</td>
-                  <td>7</td>
-                  <td>Dr. Henry Cole</td>
-                  <td>Rebecca Shaw</td>
-                  <td>Jonathan Lee</td>
-                  <td>Maria Lopez</td>
-                  <td>Mathematics</td>
-                  <td><a href="#">View</a></td>
-                  <td><a href="#">Download</a></td>
-                </tr>
-                <tr>
-                  <td>2023-2024</td>
-                  <td>2</td>
-                  <td>Dr. Olivia Reyes</td>
-                  <td>Christopher Davis</td>
-                  <td>Emily Clark</td>
-                  <td>Samuel Wright</td>
-                  <td>Technology</td>
-                  <td><a href="#">View</a></td>
-                  <td><a href="#">Download</a></td>
-                </tr>
-              </tbody>
-            </table>
+          <div class="edit-field">
+            <label for="deanInput">Dean</label>
+            <input id="deanInput" type="text" placeholder="Dean name" />
+            <div class="error" data-error-for="deanInput"></div>
           </div>
-        </section>
-      </div>
+
+          <div class="edit-field">
+            <label for="chairInput">Chair</label>
+            <input id="chairInput" type="text" placeholder="Chair name" />
+          </div>
+
+          <div class="edit-field">
+            <label for="programsInput">Programs (count)</label>
+            <input id="programsInput" type="text" inputmode="numeric" placeholder="Number only" />
+            <div class="hint">Whole number only</div>
+            <div class="error" data-error-for="programsInput"></div>
+          </div>
+
+          <div class="edit-field full">
+            <label for="notesInput">Notes</label>
+            <textarea id="notesInput" rows="5" placeholder="Notes"></textarea>
+          </div>
+        </div>
+
+        <div class="toolbar">
+          <button class="btn btn-ghost" id="backToDashboard" type="button">Back</button>
+          <button class="btn btn-danger" id="resetEdit" type="button">Clear Local</button>
+          <button class="btn btn-primary" id="saveEdit" type="button">Save</button>
+        </div>
+
+        <!-- programs and payees -->
+        <hr class="rule" />
+        <h3 class="section-head">Programs and Payees</h3>
+        <div id="programsEditor">
+          <!-- rendered by JS from divisions.json; allows add/edit/remove of programs and payees -->
+        </div>
+      </section>
+
+      <!-- final view -->
+      <section id="final-view" style="display:none; margin-top:18px;">
+        <h2>Finalized Data</h2>
+        <table id="final-table" class="display" style="width:100%;">
+          <thead>
+            <tr>
+              <th>Division</th>
+              <th>Dean</th>
+              <th>Chair</th>
+              <th>Program</th>
+              <th>Payees</th>
+              <th>Paid</th>
+              <th>Report</th>
+              <th>Notes</th>
+            </tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+      </section>
+
+      <!-- archives -->
+      <section class="archives-section" id="archives-section">
+        <div class="archives-head">
+          <h2 class="archives-title">View Archives</h2>
+          <button class="archives-toggle" id="archives-toggle">⮝</button>
+        </div>
+
+        <div class="archives-body" id="archives-body">
+          <table class="archives-table" id="archives-table">
+            <thead>
+              <tr>
+                <th>Year</th>
+                <th>Changes</th>
+                <th>Dean</th>
+                <th>Chair</th>
+                <th>Division</th>
+                <th>View</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>2025-2026</td><td>4</td><td>Dr Alicia Barnes</td><td>Michael Turner</td><td>Science</td>
+                <td><a href="#">View</a></td>
+              </tr>
+              <tr>
+                <td>2024-2025</td><td>7</td><td>Dr Henry Cole</td><td>Rebecca Shaw</td><td>Mathematics</td>
+                <td><a href="#">View</a></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
     </section>
 
-    <!-- right panel: recent changes timeline -->
-    <aside class="right-panel">
+    <!-- right panel -->
+    <aside class="right-panel" id="right-panel">
       <h2>Recent Changes</h2>
       <div class="rp-body">
         <ul class="change-list">
-          <li>
-            <strong>Chair:</strong> <span class="to">Dr. Sarah Mitchell</span>
-            <span class="when">2 hours ago by <span class="by">Joel</span></span>
-          </li>
-          <li>
-            <strong>PEN Contact:</strong> <span class="to">Jennifer Rodriguez</span>
-            <span class="when">Yesterday by <span class="by">Vincent</span></span>
-          </li>
-          <li>
-            <strong>Dean:</strong> <span class="to">Dr. Robert Chen</span>
-            <span class="when">3 days ago by <span class="by">Arthur</span></span>
-          </li>
+          <li><strong>Chair:</strong> <span class="to">Dr Sarah Mitchell</span> <span class="when">2 h ago by Joel</span></li>
+          <li><strong>Dean:</strong> <span class="to">Dr Robert Chen</span> <span class="when">3 d ago by Tina</span></li>
         </ul>
       </div>
     </aside>
 
-    <!-- floating toggle: opens and closes the right panel -->
+    <!-- right panel toggle -->
     <button class="toggle-btn" id="toggle-right" aria-label="Toggle right panel">⮜</button>
   </main>
 
-  <!-- scripts linking -->
-  <script src="/script.js"></script>
+  <!-- scripts -->
+  <script src="/search/search.js"></script>
   <script src="/left-panel/left-panel.js"></script>
   <script src="/cards/cards.js"></script>
-  <script src="/search/search.js"></script>
   <script src="/view-archives/view-archives.js"></script>
+  <script src="/right-panel/right-panel.js"></script>
+  <script src="/script.js"></script>
+  <script src="/edit/edit.js" defer></script>
 </body>
 </html>

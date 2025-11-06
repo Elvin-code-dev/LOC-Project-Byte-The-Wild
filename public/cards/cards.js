@@ -1,34 +1,35 @@
-/* cards.js - click to select a card and keep layout tidy */
+// /cards/cards.js
+// handle clicks on dashboard cards and announce selected division
 
-/* Get all cards inside the main grid */
-function getCardElements() {
+function getCards() {
   return document.querySelectorAll('.cards-grid .card');
 }
 
-/* Mark a card as active and ask layout to refit if available */
-function setActiveCard(clickedCard) {
-  const cardElements = getCardElements();
-  cardElements.forEach((cardElement) => cardElement.classList.remove('active'));
-  clickedCard.classList.add('active');
-
-  if (typeof fitCardsTwoRows === 'function') {
-    fitCardsTwoRows();
-  }
+function setActiveCard(card) {
+  getCards().forEach(c => c.classList.remove('active'));
+  card.classList.add('active');
 }
 
-/* Start card behavior */
-function initCards() {
-  const cardElements = getCardElements();
-  if (!cardElements.length) return;
+function announceSelection(id, name) {
+  const detail = { id: String(id || '').trim(), name: String(name || id || '').trim() };
+  if (!detail.id) return;
+  window.dispatchEvent(new CustomEvent('division:selected', { detail }));
+}
 
-  cardElements.forEach((cardElement) => {
-    cardElement.addEventListener('click', () => {
-      setActiveCard(cardElement);
+function initCards() {
+  const cards = getCards();
+  if (!cards.length) return;
+
+  cards.forEach(card => {
+    card.addEventListener('click', () => {
+      setActiveCard(card);
+      const id = card.getAttribute('data-division-id') || card.textContent.trim();
+      const name = (card.querySelector('.card-title')?.textContent || card.textContent || '').trim();
+      announceSelection(id, name);
     });
   });
 }
 
-/* Start when ready */
 if (document.readyState === 'loading') {
   document.addEventListener('DOMContentLoaded', initCards);
 } else {

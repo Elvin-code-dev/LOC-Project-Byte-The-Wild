@@ -1,30 +1,27 @@
-/* left-panel.js - handle clicks in the left panel list (simple, clear) */
+// left-panel.js — announce selected division from the left list
 
-/* Get all list items inside the left panel */
-function getLeftPanelListItems() {
+function getItems() {
   return document.querySelectorAll('.left-panel .division-list li');
 }
-
-/* Mark the clicked item as active and remove active from others */
-function setActiveLeftPanelItem(clickedItem) {
-  const leftPanelListItems = getLeftPanelListItems();
-  leftPanelListItems.forEach((listItem) => listItem.classList.remove('active'));
-  clickedItem.classList.add('active');
+function setActive(item) {
+  getItems().forEach(li => li.classList.remove('active'));
+  item.classList.add('active');
 }
-
-/* Start left panel behavior */
+function announce(id, name) {
+  const detail = { id: String(id || '').trim(), name: String(name || id || '').trim() };
+  if (!detail.id) return;
+  window.dispatchEvent(new CustomEvent('division:selected', { detail }));
+}
 function initLeftPanel() {
-  const leftPanelListItems = getLeftPanelListItems();
-  if (!leftPanelListItems.length) return;
-
-  leftPanelListItems.forEach((listItem) => {
-    listItem.addEventListener('click', () => {
-      setActiveLeftPanelItem(listItem);
+  getItems().forEach(li => {
+    li.addEventListener('click', () => {
+      setActive(li);
+      const id = li.getAttribute('data-division-id') || li.textContent.trim();
+      const name = li.textContent.trim();
+      announce(id, name);
     });
   });
 }
-
-/* Start when ready */
 if (document.readyState === 'loading') {
   document.addEventListener('DOMContentLoaded', initLeftPanel);
 } else {
