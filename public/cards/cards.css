@@ -1,6 +1,6 @@
-/* cards.css — grid and cards visuals */
+/* cards.css handles the layout and look of division cards */
 
-/* Grid */
+/* grid that holds all cards */
 .cards-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
@@ -8,56 +8,84 @@
   align-content: start;
 }
 
-/* Card */
+/* main card box */
 .card {
   position: relative;
-  background: radial-gradient(1000px 200px at 50% -120px, rgba(44,136,43,.08), transparent 60%) #fff;
+  background: radial-gradient(
+      1000px 200px at 50% -120px,
+      rgba(44, 136, 43, 0.08),
+      transparent 60%
+    )
+    #fff;
   border: 1px solid var(--line);
   border-radius: 14px;
-  box-shadow: 0 4px 16px rgba(0,0,0,.06);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.06);
   padding: 16px 18px;
   font-weight: 600;
   color: #1f2d1f;
-  letter-spacing: .2px;
-  transition: transform .18s ease, box-shadow .18s ease, border-color .18s ease, background-position .18s ease;
+  letter-spacing: 0.2px;
+  transition:
+    transform 0.18s ease,
+    box-shadow 0.18s ease,
+    border-color 0.18s ease,
+    background-position 0.18s ease;
 }
 
-/* Top stripe */
+/* moving stripe at top of the card */
 .card::before {
   content: "";
   position: absolute;
-  left: 0; right: 0; top: 0;
+  left: 0;
+  right: 0;
+  top: 0;
   height: 8px;
   border-top-left-radius: 14px;
   border-top-right-radius: 14px;
-  background: linear-gradient(90deg, var(--primary), var(--primary-2) 55%, var(--primary));
+  background: linear-gradient(
+    90deg,
+    var(--primary),
+    var(--primary-2) 55%,
+    var(--primary)
+  );
   background-size: 200% 100%;
   animation: stripeFlow 2.4s linear infinite;
-  opacity: .9;
+  opacity: 0.9;
 }
 
-/* Interactions */
+/* hover and click actions */
 .card:hover {
   transform: translateY(-4px);
-  box-shadow: 0 14px 36px rgba(0,0,0,.12);
-  border-color: rgba(44,136,43,.34);
+  box-shadow: 0 14px 36px rgba(0, 0, 0, 0.12);
+  border-color: rgba(44, 136, 43, 0.34);
 }
-.card:active { transform: translateY(-1px) scale(.995); }
 
-/* Active (matches JS using .active) */
+.card:active {
+  transform: translateY(-1px) scale(0.995);
+}
+
+/* active style set by cards.js */
 .card.active {
-  border-color: rgba(44,136,43,.45);
-  box-shadow: 0 0 0 3px rgba(44,136,43,.18);
-  background: radial-gradient(1000px 200px at 50% -120px, rgba(44,136,43,.10), transparent 60%) #fff;
+  border-color: rgba(44, 136, 43, 0.45);
+  box-shadow: 0 0 0 3px rgba(44, 136, 43, 0.18);
+  background: radial-gradient(
+      1000px 200px at 50% -120px,
+      rgba(44, 136, 43, 0.1),
+      transparent 60%
+    )
+    #fff;
 }
 
-/* Stripe animation */
+/* stripe animation */
 @keyframes stripeFlow {
-  0% { background-position: 0% 0; }
-  100% { background-position: 200% 0; }
+  0% {
+    background-position: 0% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
 }
 
-/* Responsive columns */
+/* mobile card size */
 @media (max-width: 900px) {
   .cards-grid {
     grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));

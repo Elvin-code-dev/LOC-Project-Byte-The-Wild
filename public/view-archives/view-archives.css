@@ -1,6 +1,5 @@
-/* view-archives.css — archives drawer and table visuals */
+/* styles for the archives drawer at the bottom */
 
-/* Container */
 .archives-section {
   background: #fff;
   border: 1px solid var(--line);
@@ -9,7 +8,7 @@
   overflow: hidden;
 }
 
-/* Header */
+/* header of the drawer */
 .archives-head {
   display: flex;
   align-items: center;
@@ -19,13 +18,14 @@
   background: linear-gradient(180deg, #f6fbf7, #eef7f0);
   border-bottom: 1px solid var(--line);
 }
+
 .archives-title {
   margin: 0;
   font-weight: 800;
   color: var(--primary);
 }
 
-/* Toggle button */
+/* round toggle button */
 .archives-toggle {
   inline-size: 32px;
   block-size: 32px;
@@ -39,17 +39,24 @@
   box-shadow: 0 6px 18px rgba(0,0,0,.12);
   transition: transform .18s ease, filter .18s ease;
 }
-.archives-toggle:hover { filter: brightness(1.05); }
-.archives-section:not(.collapsed) .archives-toggle { transform: rotate(180deg); }
 
-/* Body area */
+.archives-toggle:hover {
+  filter: brightness(1.05);
+}
+
+/* flip the arrow when open */
+.archives-section:not(.collapsed) .archives-toggle {
+  transform: rotate(180deg);
+}
+
+/* inside body where the table sits */
 .archives-body {
   padding: 10px 12px 12px;
   overflow: auto;
   max-inline-size: 100%;
 }
 
-/* Table */
+/* table styling */
 .archives-table {
   width: 100%;
   border-collapse: collapse;
@@ -60,7 +67,7 @@
   overflow: hidden;
 }
 
-/* Table head */
+/* table head */
 .archives-table thead th {
   position: sticky;
   top: 0;
@@ -73,7 +80,7 @@
   z-index: 1;
 }
 
-/* Table cells */
+/* table cells */
 .archives-table td {
   padding: 10px 12px;
   border-bottom: 1px solid var(--line);
@@ -83,25 +90,33 @@
   white-space: nowrap;
 }
 
-/* Zebra (CSS thing for diffrent colors for diffrent rows)  + hover */
-.archives-table tbody tr:nth-child(even) { background: #fcfefd; }
+/* zebra rows and hover look */
+.archives-table tbody tr:nth-child(even) {
+  background: #fcfefd;
+}
+
 .archives-table tbody tr:hover {
   background: #f6fbf7;
   box-shadow: inset 0 0 0 1px rgba(45,138,49,.15);
 }
 
-/* Links */
+/* links inside table */
 .archives-table a {
   color: var(--primary);
   font-weight: 700;
   text-decoration: none;
 }
-.archives-table a:hover { text-decoration: underline; }
 
-/* Collapsed visibility */
-.archives-section.collapsed .archives-body { display: none; }
+.archives-table a:hover {
+  text-decoration: underline;
+}
 
-/* DataTables */
+/* hide body when collapsed */
+.archives-section.collapsed .archives-body {
+  display: none;
+}
+
+/* DataTables support */
 .dataTables_wrapper {
   margin-top: 6px;
   font-size: 14px;
@@ -127,14 +142,21 @@
   outline: none;
   transition: box-shadow .18s ease, border-color .18s ease;
 }
+
 .dataTables_wrapper .dataTables_filter input:focus,
 .dataTables_wrapper .dataTables_length select:focus {
   border-color: rgba(45,138,49,.45);
   box-shadow: 0 0 0 3px rgba(45,138,49,.16);
 }
 
-.dataTables_wrapper .dataTables_info { color: var(--muted); padding-top: 8px; }
-.dataTables_wrapper .dataTables_paginate { padding-top: 8px; }
+.dataTables_wrapper .dataTables_info {
+  color: var(--muted);
+  padding-top: 8px;
+}
+
+.dataTables_wrapper .dataTables_paginate {
+  padding-top: 8px;
+}
 
 .dataTables_wrapper .dataTables_paginate .paginate_button {
   border: 1px solid var(--line) !important;
@@ -146,20 +168,30 @@
   box-shadow: 0 1px 6px rgba(0,0,0,.06);
   transition: background .18s ease, box-shadow .18s ease, border-color .18s ease;
 }
+
 .dataTables_wrapper .dataTables_paginate .paginate_button:hover {
   border-color: rgba(45,138,49,.35) !important;
   box-shadow: 0 6px 18px rgba(0,0,0,.10);
 }
+
 .dataTables_wrapper .dataTables_paginate .paginate_button.current {
   color: #fff !important;
   background: linear-gradient(180deg, var(--primary), #247329) !important;
   border-color: rgba(45,138,49,.55) !important;
 }
 
-/* Responsive tweaks */
+/* mobile adjustments */
 @media (max-width: 900px) {
-  .archives-head { padding: 10px 12px; }
-  .archives-body { padding: 8px 10px 10px; }
+  .archives-head {
+    padding: 10px 12px;
+  }
+
+  .archives-body {
+    padding: 8px 10px 10px;
+  }
+
   .archives-table td,
-  .archives-table thead th { padding: 8px 10px; }
+  .archives-table thead th {
+    padding: 8px 10px;
+  }
 }

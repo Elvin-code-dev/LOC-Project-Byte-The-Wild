@@ -1,6 +1,6 @@
-/* styles.css — global variables, reset, layout, shared utilities */
+/* styles.css sets global colors layout and shared helpers */
 
-/* =============== Root Variables =============== */
+/* main color and spacing variables */
 :root {
   --primary: #2d8a31;
   --primary-2: #6ed07a;
@@ -15,9 +15,10 @@
   --shadow-3: 0 14px 36px rgba(0,0,0,.12);
 }
 
-/* =============== Reset / Base =============== */
+/* reset and basic body styles */
 * { box-sizing: border-box; }
 html, body { height: 100%; }
+
 body {
   margin: 0;
   color: var(--ink);
@@ -26,7 +27,7 @@ body {
   line-height: 1.35;
 }
 
-/* =============== Header =============== */
+/* top navbar area */
 .user-header .navbar {
   display: grid;
   grid-template-columns: auto 1fr auto auto;
@@ -37,12 +38,15 @@ body {
   border-bottom: 1px solid rgba(0,0,0,.08);
   box-shadow: 0 6px 18px rgba(0,0,0,.12);
 }
+
 .brand__title {
   margin: 0;
   font-weight: 800;
   color: #ffffff;
   letter-spacing: .2px;
 }
+
+/* older header search input kept for safety */
 .header-search input[type="search"]{
   width: 100%;
   max-width: 520px;
@@ -53,9 +57,12 @@ body {
   color: #fff;
   outline: none;
 }
-.header-search input::placeholder{ color: rgba(255,255,255,.85); }
 
-/* Buttons */
+.header-search input::placeholder {
+  color: rgba(255,255,255,.85);
+}
+
+/* main green button in header */
 .btn--accent {
   background: linear-gradient(180deg, #39b34a, #2a953a);
   color: #fff;
@@ -65,10 +72,22 @@ body {
   font-weight: 700;
   box-shadow: 0 8px 24px rgba(42,162,58,.25);
   cursor: pointer;
-  transition: transform .12s ease, box-shadow .18s ease, filter .18s ease;
+  transition:
+    transform .12s ease,
+    box-shadow .18s ease,
+    filter .18s ease;
 }
-.btn--accent:hover { transform: translateY(-1px); filter: brightness(1.03); }
-.btn--accent:active { transform: translateY(0); }
+
+.btn--accent:hover {
+  transform: translateY(-1px);
+  filter: brightness(1.03);
+}
+
+.btn--accent:active {
+  transform: translateY(0);
+}
+
+/* white outlined header button */
 .btn--ghost {
   background: transparent;
   color: #ffffff;
@@ -78,15 +97,27 @@ body {
   font-weight: 700;
   cursor: pointer;
   box-shadow: none;
-  transition: transform .12s ease, box-shadow .18s ease, background .18s ease, border-color .18s ease;
+  transition:
+    transform .12s ease,
+    box-shadow .18s ease,
+    background .18s ease,
+    border-color .18s ease;
   text-decoration: none;
   display: inline-grid;
   place-items: center;
 }
-.btn--ghost:hover { background: rgba(255,255,255,.10); border-color: rgba(255,255,255,.85); transform: translateY(-1px); }
-.btn--ghost:active { transform: translateY(0); }
 
-/* =============== Page Layout Grid  =============== */
+.btn--ghost:hover {
+  background: rgba(255,255,255,.10);
+  border-color: rgba(255,255,255,.85);
+  transform: translateY(-1px);
+}
+
+.btn--ghost:active {
+  transform: translateY(0);
+}
+
+/* three column dashboard layout */
 .page-layout {
   display: grid;
   grid-template-columns: 260px 1fr 340px;
@@ -95,21 +126,29 @@ body {
   min-height: calc(100vh - 76px);
   align-items: start;
 }
-body.rp-collapsed .page-layout { grid-template-columns: 260px 1fr 0; }
 
-/* Panel shells  */
+/* when right panel is collapsed hide its column */
+body.rp-collapsed .page-layout {
+  grid-template-columns: 260px 1fr 0;
+}
+
+/* shared panel shell styles */
 .left-panel,
 .main-content,
 .right-panel {
-  background: radial-gradient(1200px 240px at 50% -140px, rgba(44,136,43,.06), transparent 60%) var(--surface);
-  border: none; /* no page-wide border */
+  background: radial-gradient(
+      1200px 240px at 50% -140px,
+      rgba(44,136,43,.06),
+      transparent 60%
+    ) var(--surface);
+  border: none;
   border-radius: var(--radius-md);
   box-shadow: var(--shadow-1);
   padding: 16px;
   min-width: 0;
 }
 
-/* Headings */
+/* section headings inside each panel */
 .left-panel h2,
 .main-content h2,
 .right-panel h2 {
@@ -118,18 +157,27 @@ body.rp-collapsed .page-layout { grid-template-columns: 260px 1fr 0; }
   margin: 4px 0 12px;
   position: relative;
 }
+
 .left-panel h2::after,
 .main-content h2::after,
 .right-panel h2::after {
   content: "";
-  position: absolute; left: 0; right: 0; bottom: -6px;
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -6px;
   height: 3px;
-  background: linear-gradient(90deg, var(--primary), var(--primary-2) 60%, var(--primary));
+  background: linear-gradient(
+    90deg,
+    var(--primary),
+    var(--primary-2) 60%,
+    var(--primary)
+  );
   border-radius: 2px;
   opacity: .9;
 }
 
-/* Cards area container */
+/* wrapper for cards grid with scroll */
 .cards-wrap {
   overflow: auto;
   overflow-x: hidden;
@@ -137,46 +185,71 @@ body.rp-collapsed .page-layout { grid-template-columns: 260px 1fr 0; }
   margin: 0 0 16px;
 }
 
-/* Right panel floating toggle  */
+/* small fixed button that toggles right panel */
 .toggle-btn {
   position: fixed;
   right: 0;
   top: 50%;
   transform: translateY(-50%);
-  width: 32px; height: 32px;
-  display: grid; place-items: center;
-  background: var(--primary); color: #fff;
+  width: 32px;
+  height: 32px;
+  display: grid;
+  place-items: center;
+  background: var(--primary);
+  color: #fff;
   border-radius: var(--radius-sm);
   cursor: pointer;
   box-shadow: 0 2px 8px rgba(0,0,0,.15);
   z-index: 50;
-  transition: right .18s ease, transform .18s ease, opacity .18s ease;
+  transition:
+    right .18s ease,
+    transform .18s ease,
+    opacity .18s ease;
 }
-body:not(.rp-collapsed) .toggle-btn { right: calc(340px - 12px); }
-body.rp-collapsed .toggle-btn { right: 0; }
 
-/* DataTables tweaks (kept minimal) */
+/* when panel is open move button away from edge */
+body:not(.rp-collapsed) .toggle-btn {
+  right: calc(340px - 12px);
+}
+
+body.rp-collapsed .toggle-btn {
+  right: 0;
+}
+
+/* DataTables small tweaks */
 .dataTables_wrapper .dataTables_filter input {
   max-width: 260px;
 }
+
 table.dataTable thead th,
 table.dataTable tbody td {
   white-space: nowrap;
   vertical-align: middle;
 }
-table.dataTable { font-size: 14px; }
 
-/* Utilities */
+table.dataTable {
+  font-size: 14px;
+}
+
+/* helper classes */
 .hidden { display: none !important; }
 .m-0 { margin: 0 !important; }
 .mt-8 { margin-top: 8px !important; }
 .mt-12 { margin-top: 12px !important; }
 .mt-16 { margin-top: 16px !important; }
 
-/* Small Screens */
+/* one column layout on small screens */
 @media (max-width: 900px) {
-  .page-layout { grid-template-columns: 1fr; }
-  body:not(.rp-collapsed) .toggle-btn { right: min(92vw, 340px); }
+  .page-layout {
+    grid-template-columns: 1fr;
+  }
+
+  body:not(.rp-collapsed) .toggle-btn {
+    right: min(92vw, 340px);
+  }
 }
 
-#final-view .dataTables_wrapper { overflow: auto; }
+/* allow final view table to scroll inside wrapper */
+#final-view .dataTables_wrapper {
+  overflow: auto;
+}

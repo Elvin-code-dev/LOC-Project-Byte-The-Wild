@@ -1,10 +1,11 @@
-/* search.css — header search field and hints */
+/* styles for the header search bar */
 
 .header-search {
   position: relative;
   inline-size: min(720px, 100%);
 }
 
+/* main search input field */
 #global-search {
   inline-size: 100%;
   block-size: 44px;
@@ -23,11 +24,13 @@
   font-size: 15px;
 }
 
+/* placeholder text */
 #global-search::placeholder {
   color: #7a8a7a;
   opacity: 0.9;
 }
 
+/* highlight when focused */
 #global-search:focus {
   border-color: rgba(44, 136, 43, 0.55);
   box-shadow:
@@ -36,7 +39,7 @@
   background: #ffffff;
 }
 
-/* Icon wanted to add this  */
+/* search icon on the left */
 .header-search::before {
   content: "🔎";
   position: absolute;
@@ -48,6 +51,7 @@
   pointer-events: none;
 }
 
+/* small right side hint key (enter or /) */
 .header-search::after {
   content: "⏎";
   position: absolute;
@@ -60,12 +64,14 @@
   pointer-events: none;
 }
 
-/* On desktops show / */
+/* desktop version swaps the arrow for slash */
 @media (pointer: fine) {
-  .header-search::after { content: "/"; }
+  .header-search::after {
+    content: "/";
+  }
 }
 
-/* Small screens spacing */
+/* mobile spacing */
 @media (max-width: 600px) {
   #global-search {
     block-size: 42px;

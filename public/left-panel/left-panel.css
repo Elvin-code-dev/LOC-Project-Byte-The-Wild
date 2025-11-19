@@ -1,6 +1,5 @@
-/* left-panel.css — styles only for the left panel list */
+/* styles for the left panel division list */
 
-/* Panel width and surface */
 .left-panel {
   inline-size: 260px;
   background: #ffffff;
@@ -9,7 +8,7 @@
   padding: 14px;
 }
 
-/* Scroll area */
+/* scrollable body */
 .lp-body,
 .left-panel .division-list {
   max-block-size: calc(100vh - 130px);
@@ -18,13 +17,14 @@
   padding: 0;
 }
 
-/* List and items */
+/* list layout */
 .left-panel .division-list {
   list-style: none;
   display: grid;
   gap: 8px;
 }
 
+/* each item in the list */
 .left-panel .division-list li {
   position: relative;
   padding: 10px 12px 10px 14px;
@@ -34,10 +34,14 @@
   color: #1d2b1d;
   font-weight: 600;
   cursor: pointer;
-  transition: background .18s ease, box-shadow .18s ease, border-color .18s ease, transform .18s ease;
+  transition:
+    background .18s ease,
+    box-shadow .18s ease,
+    border-color .18s ease,
+    transform .18s ease;
 }
 
-/* Hover/focus */
+/* hover look */
 .left-panel .division-list li:hover,
 .left-panel .division-list li:focus-visible {
   background: #fff;
@@ -47,27 +51,37 @@
   outline: none;
 }
 
-/* Active state */
+/* active selected item */
 .left-panel .division-list li.active {
   border-color: rgba(44,136,43,.45);
   box-shadow: 0 0 0 3px rgba(44,136,43,.18);
   background: #ffffff;
 }
 
-/* Left edge indicator */
+/* left highlight line on hover or active */
 .left-panel .division-list li::before {
   content: "";
   position: absolute;
-  left: 6px; top: 10px; bottom: 10px;
+  left: 6px;
+  top: 10px;
+  bottom: 10px;
   width: 3px;
   border-radius: 3px;
   background: transparent;
   transition: background .18s ease, opacity .18s ease;
 }
-.left-panel .division-list li:hover::before { background: rgba(44,136,43,.35); }
-.left-panel .division-list li.active::before { background: var(--primary); }
 
-/* Small screens */
+.left-panel .division-list li:hover::before {
+  background: rgba(44,136,43,.35);
+}
+
+.left-panel .division-list li.active::before {
+  background: var(--primary);
+}
+
+/* small screen adjustments */
 @media (max-width: 900px) {
-  .left-panel { inline-size: auto; }
+  .left-panel {
+    inline-size: auto;
+  }
 }

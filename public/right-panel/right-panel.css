@@ -1,6 +1,5 @@
-/* right-panel.css — clean professional look */
+/* styles for the right recent changes panel */
 
-/* Panel container */
 .right-panel {
   inline-size: 340px;
   background: #ffffff;
@@ -12,7 +11,7 @@
   transition: all 0.25s ease;
 }
 
-/* Collapsed (hidden) state */
+/* collapsed state when the panel is hidden */
 .right-panel.is-collapsed {
   inline-size: 0;
   opacity: 0;
@@ -23,7 +22,7 @@
   pointer-events: none;
 }
 
-/* Title */
+/* panel title */
 .right-panel h2 {
   margin: 0 0 14px;
   font-weight: 800;
@@ -34,7 +33,7 @@
   padding-bottom: 6px;
 }
 
-/* Timeline list */
+/* list of changes shown as a vertical timeline */
 .change-list {
   list-style: none;
   padding: 0;
@@ -45,7 +44,7 @@
   position: relative;
 }
 
-/* vertical line on the left */
+/* faint vertical line down the list */
 .change-list::before {
   content: "";
   position: absolute;
@@ -57,7 +56,7 @@
   border-radius: 2px;
 }
 
-/* each item */
+/* single change item */
 .change-list li {
   position: relative;
   background: linear-gradient(180deg, #f9fbf9, #f3f9f4);
@@ -68,7 +67,7 @@
   transition: transform 0.15s ease, box-shadow 0.18s ease;
 }
 
-/* bullet circle */
+/* small circle bullet next to each item */
 .change-list li::before {
   content: "";
   position: absolute;
@@ -81,14 +80,14 @@
   box-shadow: 0 0 0 3px rgba(45, 138, 49, 0.15);
 }
 
-/* hover effect */
+/* hover effect for each item */
 .change-list li:hover {
   transform: translateY(-2px);
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
   background: #ffffff;
 }
 
-/* Role label */
+/* division name */
 .change-list strong {
   display: inline-block;
   font-weight: 700;
@@ -96,42 +95,47 @@
   min-width: 90px;
 }
 
-/* new value (to) */
+/* programs and payees text */
 .change-list .to {
   font-weight: 600;
   color: #1f2d1f;
 }
 
-/* time info */
+/* time text like 2 h ago */
 .change-list .when {
   display: block;
   margin-top: 4px;
   font-size: 0.85rem;
   color: #6b786b;
 }
+
 .change-list .when .by {
   font-weight: 600;
   color: #2d8a31;
 }
 
-/* Scroll container */
+/* scroll container inside the panel */
 .rp-body {
   max-block-size: calc(100vh - 140px);
   overflow-y: auto;
   padding-right: 4px;
 }
 
-/* small scrollbar */
-.rp-body::-webkit-scrollbar { width: 6px; }
+/* small scrollbar style */
+.rp-body::-webkit-scrollbar {
+  width: 6px;
+}
+
 .rp-body::-webkit-scrollbar-thumb {
   background: rgba(45, 138, 49, 0.3);
   border-radius: 3px;
 }
+
 .rp-body::-webkit-scrollbar-thumb:hover {
   background: rgba(45, 138, 49, 0.45);
 }
 
-/* Mobile behavior */
+/* mobile behavior when panel is fixed on the side */
 @media (max-width: 900px) {
   .right-panel {
     position: fixed;
