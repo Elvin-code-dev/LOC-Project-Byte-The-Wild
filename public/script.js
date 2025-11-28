@@ -81,12 +81,12 @@ function mergeEdits(divs) {
     return {
       ...d,
       divisionName: rec.divisionName || d.divisionName,
-      deanName:     rec.dean        ?? d.deanName,
-      chairName:    rec.chair       ?? d.chairName,
-      penContact:   rec.pen         ?? d.penContact,
-      locRep:       rec.loc         ?? d.locRep,
-      notes:        rec.notes       ?? d.notes,
-      programList:  Array.isArray(rec.programsData)
+      deanName: rec.dean ?? d.deanName,
+      chairName: rec.chair ?? d.chairName,
+      penContact: rec.pen ?? d.penContact,
+      locRep: rec.loc ?? d.locRep,
+      notes: rec.notes ?? d.notes,
+      programList: Array.isArray(rec.programsData)
         ? rec.programsData
         : d.programList
     }
@@ -172,7 +172,7 @@ async function buildFinalTable() {
         const payees = p?.payees
           ? p.payees.map(pe => pe.name).join(', ')
           : ''
-        const paid   = p ? (p.hasBeenPaid ? 'Yes' : 'No') : ''
+        const paid = p ? (p.hasBeenPaid ? 'Yes' : 'No') : ''
         const report = p ? (p.reportSubmitted ? 'Yes' : 'No') : ''
 
         rows.push([
@@ -229,7 +229,7 @@ async function buildFinalTable() {
         const payees = p?.payees
           ? p.payees.map(pe => pe.name).join(', ')
           : ''
-        const paid   = p ? (p.hasBeenPaid ? 'Yes' : 'No') : ''
+        const paid = p ? (p.hasBeenPaid ? 'Yes' : 'No') : ''
         const report = p ? (p.reportSubmitted ? 'Yes' : 'No') : ''
 
         rows.push([

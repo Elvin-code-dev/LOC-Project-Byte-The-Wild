@@ -5,8 +5,18 @@
 function toggleRightPanel() {
   const body = document.body
   const btn = document.getElementById('toggle-right')
+  //======A Chnge starts =======
+  const panel = document.getElementById('right-panel')
+  //======A Chnge ends ===
 
   body.classList.toggle('rp-collapsed')
+  //======A Chnge starts ====
+  // ALSO toggle the per-panel collapsed class (used especially on mobile)
+  if (panel) {
+    panel.classList.toggle('is-collapsed')
+  }
+  //======A Chnge ends =====
+
 
   // arrow points into the page when open and out when collapsed
   const collapsed = body.classList.contains('rp-collapsed')
@@ -81,8 +91,18 @@ async function loadRecentChanges() {
 // main start for the right panel
 function initRightPanel() {
   const btn = document.getElementById('toggle-right')
+  // ====== A chnage start
+  const panel = document.getElementById('right-panel')
+  //=== end
   if (btn) btn.addEventListener('click', toggleRightPanel)
 
+  // collapse by default on small screens ====== A chnage
+  if (window.innerWidth <= 900 && panel) {
+    document.body.classList.add('rp-collapsed')
+    panel.classList.add('is-collapsed')
+    if (btn) btn.textContent = '⮞'
+  }
+  //==end
   // first load
   loadRecentChanges()
 
