@@ -19,12 +19,23 @@ function setActiveCard(card) {
 
 // let the rest of the app know which division was clicked
 function announceSelection(id, name) {
-  const detail = {
-    id: String(id || '').trim(),
-    name: String(name || id || '').trim()
+  const cleanId = String(id ?? '').trim()
+  const cleanName = String(name ?? '').trim()
+
+  // Fall back: if there is no numeric/real id, use the division name as "id"
+  const finalId = cleanId || cleanName
+
+  if (!finalId) {
+    console.warn('announceSelection: missing id and name')
+    return
   }
 
-  if (!detail.id) return
+  const detail = {
+    id: finalId,
+    name: cleanName || finalId
+  }
+
+  console.log('🔥 dispatch division:selected', detail)
 
   window.dispatchEvent(
     new CustomEvent('division:selected', { detail })
@@ -44,18 +55,80 @@ function renderCards(divisions) {
   divisions.forEach(d => {
     const div = document.createElement('div')
     div.className = 'card'
-    div.setAttribute('data-division-id', d.id)
+    div.setAttribute('data-division-id', d.id ?? d.divisionName)
 
-    const title = document.createElement('div')
-    title.className = 'card-title'
-    title.textContent = d.divisionName || ''
+    // --- clickable division title ---
+    const titleBtn = document.createElement('button')
+    titleBtn.type = 'button'
+    titleBtn.className = 'card-title card-title-link'
+    titleBtn.textContent = d.divisionName || ''
 
-    div.appendChild(title)
+    div.appendChild(titleBtn)
 
-    // clicking a card selects the division
+    // when the division title is clicked, open the division editor
+    titleBtn.addEventListener('click', (evt) => {
+      evt.stopPropagation() // don’t also trigger the card click
+      setActiveCard(div)
+
+      const idOrName = d.id ?? d.divisionName
+      announceSelection(idOrName, d.divisionName)
+    })
+
+    // --- programs list under the title ---
+    const programs = Array.isArray(d.programList) ? d.programList : []
+
+    if (programs.length > 0) {
+      const programsWrap = document.createElement('div')
+      programsWrap.className = 'card-programs'
+
+      const label = document.createElement('div')
+      label.className = 'card-programs-label'
+      label.textContent = `Programs (${programs.length})`
+      programsWrap.appendChild(label)
+
+      const listEl = document.createElement('div')
+      listEl.className = 'card-programs-list'
+
+      const maxToShow = 4
+      programs.slice(0, maxToShow).forEach(p => {
+        const pill = document.createElement('button')
+        pill.type = 'button'
+        pill.className = 'program-pill'
+        pill.textContent = p.programName || 'Untitled'
+
+        // clicking a program opens the editor and scrolls to that program
+        pill.addEventListener('click', evt => {
+          evt.stopPropagation() // don’t also trigger the card click
+
+          window.dispatchEvent(new CustomEvent('program:selected', {
+            detail: {
+              divisionId: d.id ?? d.divisionName,
+              divisionName: d.divisionName,
+              programName: p.programName || ''
+            }
+          }))
+        })
+
+        listEl.appendChild(pill)
+      })
+
+      if (programs.length > maxToShow) {
+        const more = document.createElement('span')
+        more.className = 'program-pill more-pill'
+        more.textContent = `+${programs.length - maxToShow} more`
+        listEl.appendChild(more)
+      }
+
+      programsWrap.appendChild(listEl)
+      div.appendChild(programsWrap)
+    }
+
+    // clicking anywhere on the card (except program pills / title buttons)
+    // opens the division editor too
     div.addEventListener('click', () => {
       setActiveCard(div)
-      announceSelection(d.id, d.divisionName)
+      const idOrName = d.id ?? d.divisionName
+      announceSelection(idOrName, d.divisionName)
     })
 
     frag.appendChild(div)
@@ -74,7 +147,7 @@ function initCards() {
     renderCards(window.DIVISIONS)
   }
 
-  // safety net for static HTML cards
+  // safety net for any static HTML cards
   getCards().forEach(card => {
     card.addEventListener('click', () => {
       setActiveCard(card)

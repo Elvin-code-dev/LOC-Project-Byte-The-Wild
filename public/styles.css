@@ -38,6 +38,16 @@ body {
 }
 
 
+/* Logo in navbar */
+
+.brand-logo {
+    height: 80px;
+    width: auto;
+    object-fit: contain;
+    display: block;
+}
+
+
 /* top navbar area */
 
 .user-header .navbar {
@@ -239,8 +249,26 @@ body.rp-collapsed .toggle-btn {
 
 table.dataTable thead th,
 table.dataTable tbody td {
-    white-space: nowrap;
+    /* white-space: nowrap; */
     vertical-align: middle;
+}
+
+
+/* Keep history + archives on a single line (they use horizontal scroll) */
+
+#history-table thead th,
+#history-table tbody td,
+.archives-table thead th,
+.archives-table tbody td {
+    white-space: nowrap;
+}
+
+
+/* Ensure Finalized Data table can wrap */
+
+#final-view table.dataTable thead th,
+#final-view table.dataTable tbody td {
+    white-space: normal;
 }
 
 table.dataTable {
@@ -368,7 +396,7 @@ table.dataTable {
 
 @media (max-width: 700px) {
     /* make the main table containers horizontally scrollable */
-    #final-view .dataTables_wrapper,
+    /* #final-view .dataTables_wrapper, */
     .archives-body,
     #history-table_wrapper {
         overflow-x: auto;
@@ -377,6 +405,29 @@ table.dataTable {
         position: relative;
         /* needed for the hint badge positioning */
     }
+    /* #final-view table, */
+    .archives-table,
+    #history-table {
+        min-width: 640px;
+    }
+    /* let the final table be fully responsive */
+    #final-view table {
+        min-width: 0;
+        width: 100%;
+        table-layout: auto;
+    }
+    /* subtle swipe hint */
+    #final-view .dataTables_wrapper::after,
+    .archives-body::after,
+    #history-table_wrapper::after {
+        content: "";
+    }
+    /* subtle swipe hint (archives + history only, NOT final table) */
+    .archives-body::after,
+    #history-table_wrapper::after {
+        content: "";
+    }
+    /* rest of the block stays the same */
     page-layout {
         grid-template-columns: 1fr;
         grid-template-areas: "main" "sidebar" "right";
@@ -389,20 +440,18 @@ table.dataTable {
 
 /* prevent tables from being squished too small */
 
-#final-view table,
-.archives-table,
-#history-table {
-    min-width: 640px;
-    /* adjust if you want a bit wider/narrower */
-}
+
+/* #final-view table, */
 
 
 /* subtle swipe hint */
 
-#final-view .dataTables_wrapper::after,
+
+/* #final-view .dataTables_wrapper::after, */
+
 .archives-body::after,
 #history-table_wrapper::after {
-    content: "Swipe →";
+    content: "";
     position: absolute;
     top: 6px;
     right: 8px;
@@ -422,6 +471,19 @@ table.dataTable {
 @media (min-width: 901px) {
     body.rp-collapsed .page-layout {
         grid-template-columns: 260px 1fr 0;
+    }
+}
+
+
+/* When showing Finalized Data, hide right panel on desktop */
+
+@media (min-width: 901px) {
+    body.showing-final .page-layout {
+        grid-template-columns: 260px 1fr 0;
+    }
+    body.showing-final .right-panel,
+    body.showing-final #toggle-right {
+        display: none;
     }
 }
 

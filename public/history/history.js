@@ -60,6 +60,7 @@ function buildHistoryTable(submissions) {
 
     window.__historyTableInstance = new DataTable('#history-table', {
       destroy: true,
+      responsive: true,
       autoWidth: false,
       scrollX: true,
       scrollY: '60vh',

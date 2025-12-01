@@ -167,9 +167,9 @@ function EDIT_applyFieldState(input) {
 // update state for all main header fields
 function EDIT_applyAllStates() {
   const { nameEl, deanEl, chairEl, penEl, locEl, notesEl } = EDIT_els()
-  ;[nameEl, deanEl, chairEl, penEl, locEl, notesEl]
-    .filter(Boolean)
-    .forEach(EDIT_applyFieldState)
+    ;[nameEl, deanEl, chairEl, penEl, locEl, notesEl]
+      .filter(Boolean)
+      .forEach(EDIT_applyFieldState)
 }
 
 // show a small toast box with a message
@@ -287,23 +287,23 @@ function EDIT_collectRequiredIssues() {
   const issues = []
   const toTBD = []
 
-  // required header fields
-  ;[
-    { el: nameEl, label: 'Division Name' },
-    { el: deanEl, label: 'Dean' },
-    { el: chairEl, label: 'Chair' },
-    { el: penEl, label: 'PEN Contact' },
-    { el: locEl, label: 'LOC Rep' }
-  ].forEach(({ el, label }) => {
-    const val = String(el?.value || '').trim()
-    if (!val) {
-      issues.push(label)
-      toTBD.push(() => {
-        el.value = 'TBD'
-        EDIT_applyFieldState(el)
-      })
-    }
-  })
+    // required header fields
+    ;[
+      { el: nameEl, label: 'Division Name' },
+      { el: deanEl, label: 'Dean' },
+      { el: chairEl, label: 'Chair' },
+      { el: penEl, label: 'PEN Contact' },
+      { el: locEl, label: 'LOC Rep' }
+    ].forEach(({ el, label }) => {
+      const val = String(el?.value || '').trim()
+      if (!val) {
+        issues.push(label)
+        toTBD.push(() => {
+          el.value = 'TBD'
+          EDIT_applyFieldState(el)
+        })
+      }
+    })
 
   // programs must have names and payees in Name - Amount format
   const cards = [...programsMount.querySelectorAll('.card')]
@@ -531,10 +531,10 @@ function EDIT_renderProgramsEditor(divRec) {
       EDIT_applyFieldState(payeesBox)
       debounceSave(EDIT_autosaveDraft)
     }
-    ;[payeesBox, paidCb, reportCb, notes].forEach(el => {
-      el.addEventListener('input', markDirtyPayees)
-      el.addEventListener('change', markDirtyPayees)
-    })
+      ;[payeesBox, paidCb, reportCb, notes].forEach(el => {
+        el.addEventListener('input', markDirtyPayees)
+        el.addEventListener('change', markDirtyPayees)
+      })
 
     // set initial state
     EDIT_applyFieldState(nameInput)
@@ -581,18 +581,18 @@ function EDIT_fillPeople(recId, recName, rec) {
     debounceSave(EDIT_autosaveDraft)
   }
 
-  ;[nameEl, deanEl, chairEl, penEl, locEl, notesEl].forEach(el => {
-    if (!el) return
-    EDIT_applyFieldState(el)
-    el.addEventListener('input', () => {
+    ;[nameEl, deanEl, chairEl, penEl, locEl, notesEl].forEach(el => {
+      if (!el) return
       EDIT_applyFieldState(el)
-      onDirty()
+      el.addEventListener('input', () => {
+        EDIT_applyFieldState(el)
+        onDirty()
+      })
+      el.addEventListener('change', () => {
+        EDIT_applyFieldState(el)
+        onDirty()
+      })
     })
-    el.addEventListener('change', () => {
-      EDIT_applyFieldState(el)
-      onDirty()
-    })
-  })
 }
 
 // save the current draft to localStorage
@@ -700,7 +700,7 @@ async function EDIT_manualSave() {
   EDIT_dirty = false
 
   const { nameEl, deanEl, chairEl, penEl, locEl, notesEl } = EDIT_els()
-  ;[nameEl, deanEl, chairEl, penEl, locEl, notesEl].forEach(flashSavedStrong)
+    ;[nameEl, deanEl, chairEl, penEl, locEl, notesEl].forEach(flashSavedStrong)
   $$('#programsEditor .card').forEach(flashSavedStrong)
 
   EDIT_toast('All changes saved')
@@ -829,11 +829,51 @@ function EDIT_listenSelection() {
   })
 }
 
+// listen for a program:selected event (from cards)
+// open the division editor and scroll to that program’s card
+function EDIT_listenProgramSelected() {
+  window.addEventListener('program:selected', e => {
+    const { divisionId, divisionName, programName } = e.detail || {}
+    if (!divisionId && !divisionName) return
+
+    EDIT_guardBeforeExit(async () => {
+      // open the editor for that division
+      await EDIT_openEditor(divisionId, divisionName)
+
+      if (!programName) return
+
+      // after editor is built, scroll to the matching program card
+      const { programsMount } = EDIT_els()
+      if (!programsMount) return
+
+      const cards = programsMount.querySelectorAll('.card')
+      const targetName = String(programName).trim().toLowerCase()
+
+      for (const card of cards) {
+        const nameInput = card.querySelector('[data-field="programName"]')
+        if (!nameInput) continue
+
+        const val = (nameInput.value || '').trim().toLowerCase()
+        if (val === targetName) {
+          card.scrollIntoView({ behavior: 'smooth', block: 'start' })
+          flashSavedStrong(card)
+          break
+        }
+      }
+    })
+  })
+}
+
+
+
 // start up this editor module
 function EDIT_start() {
   EDIT_wireButtons()
   EDIT_listenSelection()
+  EDIT_listenProgramSelected()
 }
+
+
 
 // run when DOM is ready
 if (document.readyState === 'loading') {

@@ -27,6 +27,11 @@ document.addEventListener('DOMContentLoaded', async () => {
   const divisions = await loadDivisions()
   window.DIVISIONS = divisions
   console.log('Loaded divisions:', divisions)
+
+  // if cards.js is loaded, rebuild the cards with full data
+  if (typeof window.renderCards === 'function') {
+    window.renderCards(divisions)
+  }
 })
 
 /* read local edits store used by edit.js */
@@ -118,9 +123,10 @@ function showFinalOnly() {
   const fv = document.getElementById('final-view')
   if (fv) fv.style.display = 'block'
 
-  if (fv) {
-    window.scrollTo({ top: fv.offsetTop - 10, behavior: 'smooth' })
-  }
+  // if (fv) {
+  //   window.scrollTo({ top: fv.offsetTop - 10, behavior: 'smooth' })
+  // }
+  document.body.classList.remove('showing-final')
 
   setFinalButton(true)
 }
@@ -151,10 +157,25 @@ async function buildFinalTable() {
   const base = await loadDivisions()
   const divisions = mergeEdits(base)
 
+  // // read header columns and build a signature string
+  // const ths = Array.from(document.querySelectorAll('#final-table thead th'))
+  // const headers = ths.map(th => th.textContent.trim())
+  // const signature = headers.join('|').toLowerCase()
+
+  // =======code replaced by A
+
   // read header columns and build a signature string
   const ths = Array.from(document.querySelectorAll('#final-table thead th'))
+
+  // ignore the first (control) column when building the signature
   const headers = ths.map(th => th.textContent.trim())
+
+  // .filter(text => text !== '') // ignore the blank control header
+
   const signature = headers.join('|').toLowerCase()
+
+  ///========== code replaced until here 
+
 
   const tbody = document.querySelector('#final-table tbody')
   if (!tbody) throw new Error('final-table not found')
@@ -264,9 +285,13 @@ async function buildFinalTable() {
   // paint rows to tbody to match current header count
   const colCount = headers.length
 
+
   tbody.innerHTML = rows
     .map(r => {
       const cells = []
+      // control column for Responsive (+ / - icon)
+      //cells.push('<td></td>')
+      //add actual data coloumns
       for (let i = 0; i < colCount; i++) {
         cells.push(`<td>${String(r[i] ?? '')}</td>`)
       }
@@ -274,6 +299,7 @@ async function buildFinalTable() {
     })
     .join('')
 
+  // set up DataTable if library is loaded
   // set up DataTable if library is loaded
   if (window.DataTable) {
     if (window.__finalTableInstance) {
@@ -283,17 +309,35 @@ async function buildFinalTable() {
     const opts = {
       destroy: true,
       autoWidth: false,
-      scrollX: true,
-      scrollY: '55vh',
       scrollCollapse: true,
       pageLength: 25,
-      order: [[0, 'asc']].concat(colCount > 5 ? [[5, 'asc']] : []),
-      responsive: true
-    }
+      order: [[0, 'asc'], [3, 'asc']],
+      //responsive: true,   // let DataTables Responsive handle + / - automatically
 
+
+
+      // Use Responsive extension with a control column
+      // Tell Responsive to use the *first column* as the control
+      responsive: {
+        details: {
+          type: 'column',  // use a column with the dtr-control class
+          target: 0        // index 0 = "Division" column
+        }
+      },
+
+
+      columnDefs: [
+        {
+          targets: 0,             // first column
+          className: 'dt-control', // Responsive CSS will add the ▶ / ▼ icon
+          orderable: true
+        }
+      ]
+    }
     window.__finalTableInstance = new DataTable('#final-table', opts)
   }
 }
+
 
 /* handle clicks on View Final button */
 

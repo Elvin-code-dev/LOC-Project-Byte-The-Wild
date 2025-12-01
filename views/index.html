@@ -1,219 +1,235 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-  <!-- basic page info and metadata -->
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Green River College | LOC Chair — Learning Outcomes</title>
+    <!-- basic page info and metadata -->
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Green River College | LOC Chair — Learning Outcomes</title>
 
-  <!-- small icon shown in browser tabs -->
-  <link rel="icon" type="image/png" href="/images/logo.PNG" />
+    <!-- small icon shown in browser tabs -->
+    <link rel="icon" type="image/png" href="/images/logo.PNG" />
 
-  <!-- libraries for tables and jquery -->
-  <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
-  <link rel="stylesheet" href="https://cdn.datatables.net/2.3.4/css/dataTables.dataTables.min.css" />
-  <script src="https://cdn.datatables.net/2.3.4/js/dataTables.min.js"></script>
-  <link rel="stylesheet" href="https://cdn.datatables.net/responsive/2.5.1/css/responsive.dataTables.min.css" />
-  <script src="https://cdn.datatables.net/responsive/2.5.1/js/dataTables.responsive.min.js"></script>
+    <!-- libraries for tables and jquery -->
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.datatables.net/2.3.4/css/dataTables.dataTables.min.css" />
+    <script src="https://cdn.datatables.net/2.3.4/js/dataTables.min.js"></script>
 
-  <!-- main app styles -->
-  <link rel="stylesheet" href="/styles.css" />
-  <link rel="stylesheet" href="/left-panel/left-panel.css" />
-  <link rel="stylesheet" href="/cards/cards.css" />
-  <link rel="stylesheet" href="/right-panel/right-panel.css" />
-  <link rel="stylesheet" href="/search/search.css" />
-  <link rel="stylesheet" href="/view-archives/view-archives.css" />
-  <link rel="stylesheet" href="/edit/edit.css" />
+    <link rel="stylesheet" href="https://cdn.datatables.net/2.3.5/css/dataTables.dataTables.css">
+
+    <link rel="stylesheet" href="https://cdn.datatables.net/responsive/3.0.7/css/responsive.dataTables.css">
+
+
+    <link rel="stylesheet" href="https://cdn.datatables.net/responsive/2.5.1/css/responsive.dataTables.min.css" />
+    <script src="https://cdn.datatables.net/responsive/2.5.1/js/dataTables.responsive.min.js"></script>
+
+
+
+
+    <!-- main app styles -->
+    <link rel="stylesheet" href="/styles.css" />
+    <link rel="stylesheet" href="/left-panel/left-panel.css" />
+    <link rel="stylesheet" href="/cards/cards.css" />
+    <link rel="stylesheet" href="/right-panel/right-panel.css" />
+    <link rel="stylesheet" href="/search/search.css" />
+    <link rel="stylesheet" href="/view-archives/view-archives.css" />
+    <link rel="stylesheet" href="/edit/edit.css" />
+
+    <!-- data table style responsive -->
+    <link rel="stylesheet" href="https://cdn.datatables.net/responsive/2.5.1/css/responsive.dataTables.min.css" />
+    <script src="https://cdn.datatables.net/responsive/2.5.1/js/dataTables.responsive.min.js"></script>
 </head>
 
 <body>
-  <!-- top bar with title search and buttons -->
-  <header class="user-header">
-    <div class="navbar">
-      <div class="brand">
-        <h1 class="brand__title">Green River College</h1>
-      </div>
+    <!-- top bar with title search and buttons -->
+    <header class="user-header">
+        <div class="navbar">
+            <div class="brand">
+                <img src="images/gc_logo.png" alt="Green River College Logo" class="brand-logo">
+            </div>
 
-      <!-- search bar for dividing filtering -->
-      <div class="header-search">
-        <input id="global-search" type="search"
-        placeholder="Search divisions, programs, contacts..." />
-      </div>
+            <!-- search bar for dividing filtering -->
+            <div class="header-search">
+                <input id="global-search" type="search" placeholder="Search divisions, programs, contacts..." />
+            </div>
 
-      <!-- link to version history -->
-      <a class="btn btn--ghost" id="history-link" href="/history.html">History</a>
+            <!-- link to version history -->
+            <a class="btn btn--ghost" id="history-link" href="/history.html">History</a>
 
-      <!-- show final table button -->
-      <button class="btn btn--accent" id="view-final-btn" type="button">View Final</button>
-    </div>
-  </header>
-
-  <!-- dashboard layout -->
-  <main class="page-layout">
-
-    <!-- left sidebar with division list -->
-    <aside class="left-panel">
-      <h2>Divisions</h2>
-      <div class="lp-body">
-        <ul class="division-list" id="division-list">
-          <!-- starter items shown until real data loads -->
-          <li class="division-item" data-division-id="Science">Science</li>
-          <li class="division-item" data-division-id="Technology">Technology</li>
-          <li class="division-item" data-division-id="Business">Business</li>
-          <li class="division-item" data-division-id="Health">Health</li>
-          <li class="division-item" data-division-id="Fine Arts">Fine Arts</li>
-          <li class="division-item" data-division-id="Humanities">Humanities</li>
-          <li class="division-item" data-division-id="Social Science">Social Science</li>
-          <li class="division-item" data-division-id="Trades">Trades</li>
-          <li class="division-item" data-division-id="Education">Education</li>
-        </ul>
-      </div>
-    </aside>
-
-    <!-- main dashboard area -->
-    <section class="main-content" id="main-content">
-      <h2>Dashboard</h2>
-
-      <!-- grid of division cards -->
-      <div class="cards-wrap" id="cards-wrap">
-        <div class="cards-grid" id="cards-grid">
-          <!-- starter cards shown until real data loads -->
-          <div class="card" data-division-id="Science"><span class="card-title">Science</span></div>
-          <div class="card" data-division-id="Technology"><span class="card-title">Technology</span></div>
-          <div class="card" data-division-id="Business"><span class="card-title">Business</span></div>
-          <div class="card" data-division-id="Health"><span class="card-title">Health</span></div>
-          <div class="card" data-division-id="Fine Arts"><span class="card-title">Fine Arts</span></div>
-          <div class="card" data-division-id="Humanities"><span class="card-title">Humanities</span></div>
-          <div class="card" data-division-id="Social Science"><span class="card-title">Social Science</span></div>
-          <div class="card" data-division-id="Trades"><span class="card-title">Trades</span></div>
-          <div class="card" data-division-id="Education"><span class="card-title">Education</span></div>
+            <!-- show final table button -->
+            <button class="btn btn--accent" id="view-final-btn" type="button">View Final</button>
         </div>
-      </div>
+    </header>
 
-      <!-- full editor for a single division -->
-      <section id="division-detail" style="display:none; margin-top:14px;">
-        <h2 class="edit-title">
-          Edit Division
-          <span class="badge" id="badgeName"></span>
-        </h2>
+    <!-- dashboard layout -->
+    <main class="page-layout">
 
-        <!-- hidden id used by JS -->
-        <input type="hidden" id="divisionId" />
+        <!-- left sidebar with division list -->
+        <aside class="left-panel">
+            <h2>Divisions</h2>
+            <div class="lp-body">
+                <ul class="division-list" id="division-list">
+                    <!-- starter items shown until real data loads -->
+                    <li class="division-item" data-division-id="Science">Science</li>
+                    <li class="division-item" data-division-id="Technology">Technology</li>
+                    <li class="division-item" data-division-id="Business">Business</li>
+                    <li class="division-item" data-division-id="Health">Health</li>
+                    <li class="division-item" data-division-id="Fine Arts">Fine Arts</li>
+                    <li class="division-item" data-division-id="Humanities">Humanities</li>
+                    <li class="division-item" data-division-id="Social Science">Social Science</li>
+                    <li class="division-item" data-division-id="Trades">Trades</li>
+                    <li class="division-item" data-division-id="Education">Education</li>
+                </ul>
+            </div>
+        </aside>
 
-        <!-- main editor fields -->
-        <div class="edit-grid">
-          <div class="edit-field">
-            <label for="divisionName">Division Name</label>
-            <input id="divisionName" type="text" placeholder="Division name" />
-            <div class="error" data-error-for="divisionName"></div>
-          </div>
+        <!-- main dashboard area -->
+        <section class="main-content" id="main-content">
+            <h2>Dashboard</h2>
 
-          <div class="edit-field">
-            <label for="deanInput">Dean</label>
-            <input id="deanInput" type="text" placeholder="Dean name" />
-            <div class="error" data-error-for="deanInput"></div>
-          </div>
+            <!-- grid of division cards -->
+            <div class="cards-wrap" id="cards-wrap">
+                <div class="cards-grid" id="cards-grid">
+                    <!-- starter cards shown until real data loads -->
+                    <div class="card" data-division-id="Science"><span class="card-title">Science</span></div>
+                    <div class="card" data-division-id="Technology"><span class="card-title">Technology</span></div>
+                    <div class="card" data-division-id="Business"><span class="card-title">Business</span></div>
+                    <div class="card" data-division-id="Health"><span class="card-title">Health</span></div>
+                    <div class="card" data-division-id="Fine Arts"><span class="card-title">Fine Arts</span></div>
+                    <div class="card" data-division-id="Humanities"><span class="card-title">Humanities</span></div>
+                    <div class="card" data-division-id="Social Science"><span class="card-title">Social Science</span></div>
+                    <div class="card" data-division-id="Trades"><span class="card-title">Trades</span></div>
+                    <div class="card" data-division-id="Education"><span class="card-title">Education</span></div>
+                </div>
+            </div>
 
-          <div class="edit-field">
-            <label for="chairInput">Chair</label>
-            <input id="chairInput" type="text" placeholder="Chair name" />
-          </div>
+            <!-- full editor for a single division -->
+            <section id="division-detail" style="display:none; margin-top:14px;">
+                <h2 class="edit-title">
+                    Edit Division
+                    <span class="badge" id="badgeName"></span>
+                </h2>
 
-          <div class="edit-field">
-            <label for="programsInput">Programs (count)</label>
-            <input id="programsInput" type="text" inputmode="numeric" placeholder="Number only" />
-            <div class="hint">Whole number only</div>
-            <div class="error" data-error-for="programsInput"></div>
-          </div>
+                <!-- hidden id used by JS -->
+                <input type="hidden" id="divisionId" />
 
-          <div class="edit-field full">
-            <label for="notesInput">Notes</label>
-            <textarea id="notesInput" rows="5" placeholder="Notes"></textarea>
-          </div>
-        </div>
+                <!-- main editor fields -->
+                <div class="edit-grid">
+                    <div class="edit-field">
+                        <label for="divisionName">Division Name</label>
+                        <input id="divisionName" type="text" placeholder="Division name" />
+                        <div class="error" data-error-for="divisionName"></div>
+                    </div>
 
-        <!-- editor buttons -->
-        <div class="toolbar">
-          <button class="btn btn-ghost" id="backToDashboard" type="button">Back</button>
-          <button class="btn btn-danger" id="resetEdit" type="button">Clear Local</button>
-          <button class="btn btn-primary" id="saveEdit" type="button">Save</button>
-        </div>
+                    <div class="edit-field">
+                        <label for="deanInput">Dean</label>
+                        <input id="deanInput" type="text" placeholder="Dean name" />
+                        <div class="error" data-error-for="deanInput"></div>
+                    </div>
 
-        <!-- programs and payees section -->
-        <hr class="rule" />
-        <div id="programsEditor">
-          <!-- filled by JS -->
-        </div>
-      </section>
+                    <div class="edit-field">
+                        <label for="chairInput">Chair</label>
+                        <input id="chairInput" type="text" placeholder="Chair name" />
+                    </div>
 
-      <!-- final view table -->
-      <section id="final-view" style="display:none; margin-top:18px;">
-        <h2>Finalized Data</h2>
-        <table id="final-table" class="display" style="width:100%;">
-          <thead>
-            <tr>
-              <th>Division</th>
-              <th>Dean</th>
-              <th>Chair</th>
-              <th>Program</th>
-              <th>Payees</th>
-              <th>Paid</th>
-              <th>Report</th>
-              <th>Notes</th>
-            </tr>
-          </thead>
-          <tbody></tbody>
-        </table>
-      </section>
+                    <div class="edit-field">
+                        <label for="programsInput">Programs (count)</label>
+                        <input id="programsInput" type="text" inputmode="numeric" placeholder="Number only" />
+                        <div class="hint">Whole number only</div>
+                        <div class="error" data-error-for="programsInput"></div>
+                    </div>
 
-      <!-- archives drawer at the bottom -->
-      <section class="archives-section" id="archives-section">
-        <div class="archives-head">
-          <h2 class="archives-title">View Archives</h2>
-          <button class="archives-toggle" id="archives-toggle">⮝</button>
-        </div>
+                    <div class="edit-field full">
+                        <label for="notesInput">Notes</label>
+                        <textarea id="notesInput" rows="5" placeholder="Notes"></textarea>
+                    </div>
+                </div>
 
-        <div class="archives-body" id="archives-body">
-           <table class="archives-table" id="archives-table">
-            <thead>
-              <tr>
-                <th>Year</th>
-                <th>Changes</th>
-                <th>Dean</th>
-                <th>Chair</th>
-                <th>Division</th>
-                <th>View</th>
-              </tr>
-            </thead>
-            <tbody id="archives-tbody">
-              <tr><td colspan="6">Loading archives…</td></tr>
-            </tbody>
-          </table>
-        </div>
-      </section>
-    </section>
+                <!-- editor buttons -->
+                <div class="toolbar">
+                    <button class="btn btn-ghost" id="backToDashboard" type="button">Back</button>
+                    <button class="btn btn-danger" id="resetEdit" type="button">Clear Local</button>
+                    <button class="btn btn-primary" id="saveEdit" type="button">Save</button>
+                </div>
 
-    <!-- right panel showing recent updates -->
-    <aside class="right-panel" id="right-panel">
-      <h2>Recent Changes</h2>
-      <div class="rp-body">
-        <ul class="change-list" id="recent-changes-list">
-          <li class="placeholder">No recent changes yet. Try saving a division.</li>
-        </ul>
-      </div>
-    </aside>
+                <!-- programs and payees section -->
+                <hr class="rule" />
+                <div id="programsEditor">
+                    <!-- filled by JS -->
+                </div>
+            </section>
 
-    <!-- toggle button for right panel -->
-    <button class="toggle-btn" id="toggle-right" aria-label="Toggle right panel">⮜</button>
-  </main>
+            <!-- final view table -->
+            <section id="final-view" style="display:none; margin-top:18px;">
+                <h2>Finalized Data</h2>
+                <table id="final-table" class="display" style="width:100%;">
+                    <thead>
+                        <tr>
+                            <th>Division</th>
+                            <th>Dean</th>
+                            <th>Chair</th>
+                            <th>Program</th>
+                            <th>Payees</th>
+                            <th>Paid</th>
+                            <th>Report</th>
+                            <th>Notes</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            </section>
 
-  <!-- main scripts for the dashboard -->
-  <script src="/search/search.js"></script>
-  <script src="/left-panel/left-panel.js"></script>
-  <script src="/cards/cards.js"></script>
-  <script src="/view-archives/view-archives.js"></script>
-  <script src="/right-panel/right-panel.js"></script>
-  <script src="/script.js"></script>
-  <script src="/edit/edit.js" defer></script>
+            <!-- archives drawer at the bottom -->
+            <section class="archives-section" id="archives-section">
+                <div class="archives-head">
+                    <h2 class="archives-title">View Archives</h2>
+                    <button class="archives-toggle" id="archives-toggle">⮝</button>
+                </div>
+
+                <div class="archives-body" id="archives-body">
+                    <table class="archives-table" id="archives-table">
+                        <thead>
+                            <tr>
+                                <th>Year</th>
+                                <th>Changes</th>
+                                <th>Dean</th>
+                                <th>Chair</th>
+                                <th>Division</th>
+                                <th>View</th>
+                            </tr>
+                        </thead>
+                        <tbody id="archives-tbody">
+                            <tr>
+                                <td colspan="6">Loading archives…</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+        </section>
+
+        <!-- right panel showing recent updates -->
+        <aside class="right-panel" id="right-panel">
+            <h2>Recent Changes</h2>
+            <div class="rp-body">
+                <ul class="change-list" id="recent-changes-list">
+                    <li class="placeholder">No recent changes yet. Try saving a division.</li>
+                </ul>
+            </div>
+        </aside>
+
+        <!-- toggle button for right panel -->
+        <button class="toggle-btn" id="toggle-right" aria-label="Toggle right panel">⮜</button>
+    </main>
+
+    <!-- main scripts for the dashboard -->
+    <script src="/search/search.js"></script>
+    <script src="/left-panel/left-panel.js"></script>
+    <script src="/cards/cards.js"></script>
+    <script src="/view-archives/view-archives.js"></script>
+    <script src="/right-panel/right-panel.js"></script>
+    <script src="/script.js"></script>
+    <script src="/edit/edit.js" defer></script>
 </body>
+
 </html>

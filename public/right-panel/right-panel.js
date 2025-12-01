@@ -107,7 +107,8 @@ function initRightPanel() {
   loadRecentChanges()
 
   // refresh every 10 seconds so the panel stays up to date
-  setInterval(loadRecentChanges, 10000)
+  //====== I desabled this to reduce the number of error messages on browser untile teh db issue is fixed 
+  //setInterval(loadRecentChanges, 10000)
 }
 
 // allow other scripts to refresh the panel if they want
