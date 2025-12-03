@@ -9,6 +9,7 @@
    Grid Layout
    ============================================================================ */
 
+/* grid that holds all cards */
 .cards-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
@@ -21,6 +22,7 @@
    Main Card Appearance
    ============================================================================ */
 
+/* main card box */
 .card {
   position: relative;
   background: radial-gradient(
@@ -48,6 +50,7 @@
    Moving Accent Stripe
    ============================================================================ */
 
+/* moving stripe at top of the card */
 .card::before {
   content: "";
   position: absolute;
@@ -57,7 +60,6 @@
   height: 8px;
   border-top-left-radius: 14px;
   border-top-right-radius: 14px;
-
   background: linear-gradient(
     90deg,
     var(--primary),
@@ -74,6 +76,7 @@
    Hover / Active States
    ============================================================================ */
 
+/* hover and click actions */
 .card:hover {
   transform: translateY(-4px);
   box-shadow: 0 14px 36px rgba(0, 0, 0, 0.12);
@@ -84,7 +87,7 @@
   transform: translateY(-1px) scale(0.995);
 }
 
-/* Applied from cards.js when a card is selected */
+/* active style set by cards.js */
 .card.active {
   border-color: rgba(44, 136, 43, 0.45);
   box-shadow: 0 0 0 3px rgba(44, 136, 43, 0.18);
@@ -97,7 +100,79 @@
 }
 
 
-/* Accent stripe flow animation */
+/* ============================================================================
+   Program List Inside Cards
+   ============================================================================ */
+
+/* container for the programs under a division */
+.card-programs {
+  margin-top: 8px;
+  padding-top: 6px;
+  border-top: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.card-programs-label {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--muted);
+  margin-bottom: 4px;
+}
+
+.card-programs-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+}
+
+.program-pill {
+  border: none;
+  border-radius: 999px;
+  padding: 2px 8px;
+  font-size: 0.75rem;
+  background: rgba(45, 138, 49, 0.08);
+  color: var(--primary);
+  cursor: pointer;
+}
+
+.program-pill:hover {
+  background: rgba(45, 138, 49, 0.16);
+}
+
+/* improvement-selected programs: yellow + stronger look */
+.program-pill-improvement {
+  background: #f6c453;
+  color: #3a2a00;
+  font-weight: 600;
+  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.04);
+}
+
+.more-pill {
+  cursor: default;
+  opacity: 0.8;
+}
+
+/* clickable division title */
+.card-title-link {
+  background: none;
+  border: none;
+  padding: 0;
+  margin: 0 0 4px 0;
+  font: inherit;
+  color: var(--primary);
+  text-align: left;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.card-title-link:hover {
+  text-decoration: none;
+}
+
+
+/* ============================================================================
+   Accent Stripe Animation
+   ============================================================================ */
+
 @keyframes stripeFlow {
   0% {
     background-position: 0% 0;

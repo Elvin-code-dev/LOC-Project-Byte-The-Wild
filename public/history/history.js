@@ -32,7 +32,7 @@ function dollar(n) {
 
 /**
  * Convert API timestamp → readable date/time
- * Example: 2024-02-01T18:44:11.000Z → "2/1/2024, 10:44 AM"
+ * Example: 2024-02-01T18:44:11.000Z → "2/1/2024, 10:44 AM
  */
 function formatDate(raw) {
   const date = new Date(raw)
@@ -90,13 +90,14 @@ function buildHistoryTable(submissions) {
     }
 
     window.__historyTableInstance = new DataTable('#history-table', {
-      destroy: true,         // allow re-init
+      destroy: true,         
+      responsive: true,
       autoWidth: false,
       scrollX: true,
       scrollY: '60vh',
       scrollCollapse: true,
       pageLength: 25,
-      order: [[0, 'desc']]   // sort newest first
+      order: [[0, 'desc']]  
     })
   }
 }

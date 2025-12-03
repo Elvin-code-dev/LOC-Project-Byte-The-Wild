@@ -4,7 +4,10 @@
 
    Each card:
    • Displays a division name
-   • Highlights when selected
+   • Shows all programs inside the card
+   • Programs marked for improvement are sorted to the top
+   • Programs marked for improvement get a special highlight class
+   • Highlights the card when selected
    • Dispatches "division:selected" so edit.js can load the division
    ============================================================================ */
 
@@ -29,17 +32,50 @@ function setActiveCard(card) {
   card.classList.add('active')
 }
 
+// return true if a program is marked for improvement (from DB or schedule)
+function isProgramMarkedForImprovement(p) {
+  if (!p) return false
+
+  const raw =
+    p.selectedForImprovement ??
+    p.improvementSelected ??
+    p.markedForImprovement ??
+    p.marked_for_improvement
+
+  if (raw == null) return false
+
+  // handle different data types (bool, number, string)
+  if (typeof raw === 'string') {
+    const v = raw.toLowerCase()
+    return v === '1' || v === 'true' || v === 'yes' || v === 'y'
+  }
+
+  return !!raw
+}
+
+
 /**
  * Let the rest of the app know a division was chosen.
  * edit.js listens for this event.
  */
 function announceSelection(id, name) {
-  const detail = {
-    id: String(id || '').trim(),
-    name: String(name || id || '').trim()
+  const cleanId = String(id ?? '').trim()
+  const cleanName = String(name ?? '').trim()
+
+  // Fall back: if there is no numeric/real id, use the division name as "id"
+  const finalId = cleanId || cleanName
+
+  if (!finalId) {
+    console.warn('announceSelection: missing id and name')
+    return
   }
 
-  if (!detail.id) return
+  const detail = {
+    id: finalId,
+    name: cleanName || finalId
+  }
+
+  console.log('🔥 dispatch division:selected', detail)
 
   window.dispatchEvent(
     new CustomEvent('division:selected', { detail })
@@ -67,18 +103,88 @@ function renderCards(divisions) {
   divisions.forEach(d => {
     const div = document.createElement('div')
     div.className = 'card'
-    div.setAttribute('data-division-id', d.id)
+    div.setAttribute('data-division-id', d.id ?? d.divisionName)
 
-    const title = document.createElement('div')
-    title.className = 'card-title'
-    title.textContent = d.divisionName || ''
+    // --- clickable division title ---
+    const titleBtn = document.createElement('button')
+    titleBtn.type = 'button'
+    titleBtn.className = 'card-title card-title-link'
+    titleBtn.textContent = d.divisionName || ''
 
-    div.appendChild(title)
+    div.appendChild(titleBtn)
 
-    /** Clicking a card selects the division */
+    // when the division title is clicked, open the division editor
+    titleBtn.addEventListener('click', (evt) => {
+      evt.stopPropagation() 
+      setActiveCard(div)
+
+      const idOrName = d.id ?? d.divisionName
+      announceSelection(idOrName, d.divisionName)
+    })
+
+    // --- programs list under the title ---
+    let programs = Array.isArray(d.programList) ? [...d.programList] : []
+
+    if (programs.length > 0) {
+      // sort so "selected for improvement" programs are at the top
+      programs.sort((a, b) => {
+        const aSelected = isProgramMarkedForImprovement(a)
+        const bSelected = isProgramMarkedForImprovement(b)
+
+        if (aSelected === bSelected) return 0
+        return aSelected ? -1 : 1
+      })
+
+
+      const programsWrap = document.createElement('div')
+      programsWrap.className = 'card-programs'
+
+      const label = document.createElement('div')
+      label.className = 'card-programs-label'
+      label.textContent = `Programs (${programs.length})`
+      programsWrap.appendChild(label)
+
+      const listEl = document.createElement('div')
+      listEl.className = 'card-programs-list'
+
+      // show ALL programs in the card
+      programs.forEach(p => {
+        const pill = document.createElement('button')
+        pill.type = 'button'
+        pill.className = 'program-pill'
+        pill.textContent = p.programName || 'Untitled'
+
+        // highlight if this program is selected for improvement
+        if (isProgramMarkedForImprovement(p)) {
+          pill.classList.add('program-pill-improvement') 
+        }
+
+
+        // clicking a program opens the editor and scrolls to that program
+        pill.addEventListener('click', evt => {
+          evt.stopPropagation() 
+
+          window.dispatchEvent(new CustomEvent('program:selected', {
+            detail: {
+              divisionId: d.id ?? d.divisionName,
+              divisionName: d.divisionName,
+              programName: p.programName || ''
+            }
+          }))
+        })
+
+        listEl.appendChild(pill)
+      })
+
+      programsWrap.appendChild(listEl)
+      div.appendChild(programsWrap)
+    }
+
+    // Clicking a card selects the division
     div.addEventListener('click', () => {
       setActiveCard(div)
-      announceSelection(d.id, d.divisionName)
+      const idOrName = d.id ?? d.divisionName
+      announceSelection(idOrName, d.divisionName)
     })
 
     frag.appendChild(div)

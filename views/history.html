@@ -8,19 +8,31 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>LOC Version History — Green River College</title>
 
-  <!-- Browser tab icon -->
-  <link rel="icon" type="image/png" href="/images/logo.PNG" />
+  
+
+    <!-- favicon -->
+  <link rel="icon" type="image/png" href="/images/gc_logo1.PNG" />
+
 
   <!-- -----------------------------------------------------------------------
-       External libraries (DataTables + jQuery)
+       External libraries (DataTables + jQuery + Responsive)
        Used to render the history table interactively
   ------------------------------------------------------------------------ -->
   <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+
+  <!-- Core DataTables -->
   <link
     rel="stylesheet"
     href="https://cdn.datatables.net/2.3.4/css/dataTables.dataTables.min.css"
   />
   <script src="https://cdn.datatables.net/2.3.4/js/dataTables.min.js"></script>
+
+  <!-- Responsive extension for DataTables -->
+  <link
+    rel="stylesheet"
+    href="https://cdn.datatables.net/responsive/2.5.1/css/responsive.dataTables.min.css"
+  />
+  <script src="https://cdn.datatables.net/responsive/2.5.1/js/dataTables.responsive.min.js"></script>
 
   <!-- Shared styling across the app -->
   <link rel="stylesheet" href="/styles.css" />
@@ -31,32 +43,22 @@
 <body>
 
   <!-- ======================================================================
-       HEADER — Top navigation and global search
+       HEADER — Top navigation 
   ======================================================================= -->
-  <header class="user-header">
+    <header class="user-header">
     <div class="navbar">
 
-      <!-- Brand -->
-      <div class="brand">
-        <h1 class="brand__title">Green River College</h1>
+      <a href="/" class="brand">
+        <img src="/images/gc_logo.PNG" alt="Green River College logo" class="brand-logo">
+      </a>
+
+      <div class="header-actions">
+        <a class="btn btn--ghost" href="/">Dashboard</a>
       </div>
 
-      <!-- Search bar for filtering history -->
-      <div class="header-search">
-        <input
-          id="global-search"
-          type="search"
-          placeholder="Search versions, programs, contacts..."
-        />
-      </div>
-
-      <!-- Back to dashboard -->
-      <a class="btn btn--ghost" href="/">Dashboard</a>
-
-      <!-- Placeholder: future authentication -->
-      <button class="btn btn--accent" id="sign-in-btn" type="button">Sign In</button>
     </div>
   </header>
+
 
   <!-- ======================================================================
        MAIN PAGE LAYOUT — Single column view
@@ -122,6 +124,5 @@
   ======================================================================= -->
   <script src="/search/search.js"></script>
   <script src="/history/history.js"></script>
-
 </body>
 </html>

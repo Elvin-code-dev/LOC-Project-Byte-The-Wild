@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <!-- -----------------------------------------------------------------------
        Basic metadata and page setup
@@ -9,17 +10,27 @@
 
   <title>Green River College | LOC Chair — Learning Outcomes</title>
 
-  <!-- Browser tab icon -->
-  <link rel="icon" type="image/png" href="/images/logo.PNG" />
+  <!-- favicon -->
+  <link rel="icon" type="image/png" href="/images/gc_logo1.PNG" />
 
   <!-- -----------------------------------------------------------------------
-       External libraries: jQuery + DataTables
+       External libraries: jQuery + DataTables + Responsive
        Used for advanced tables (Final View + Archives)
   ------------------------------------------------------------------------ -->
   <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
-  <link rel="stylesheet" href="https://cdn.datatables.net/2.3.4/css/dataTables.dataTables.min.css" />
+
+  <!-- Core DataTables -->
+  <link
+    rel="stylesheet"
+    href="https://cdn.datatables.net/2.3.4/css/dataTables.dataTables.min.css"
+  />
   <script src="https://cdn.datatables.net/2.3.4/js/dataTables.min.js"></script>
-  <link rel="stylesheet" href="https://cdn.datatables.net/responsive/2.5.1/css/responsive.dataTables.min.css" />
+
+  <!-- Responsive extension for DataTables -->
+  <link
+    rel="stylesheet"
+    href="https://cdn.datatables.net/responsive/2.5.1/css/responsive.dataTables.min.css"
+  />
   <script src="https://cdn.datatables.net/responsive/2.5.1/js/dataTables.responsive.min.js"></script>
 
   <!-- -----------------------------------------------------------------------
@@ -44,10 +55,15 @@
   <header class="user-header">
     <div class="navbar">
 
-      <!-- Brand name -->
-      <div class="brand">
-        <h1 class="brand__title">Green River College</h1>
-      </div>
+          <!-- Brand logo -->
+        <div class="brand">
+          <a href="/" class="brand-link" aria-label="Back to dashboard">
+            <img src="/images/gc_logo.PNG"
+                alt="Green River College logo"
+                class="brand-logo">
+          </a>
+        </div>
+
 
       <!-- Global search bar -->
       <div class="header-search">
@@ -142,6 +158,7 @@
           <div class="edit-field">
             <label for="chairInput">Chair</label>
             <input id="chairInput" type="text" placeholder="Chair name" />
+            <div class="error" data-error-for="chairInput"></div>
           </div>
 
           <div class="edit-field">
@@ -159,13 +176,22 @@
           <div class="edit-field full">
             <label for="notesInput">Notes</label>
             <textarea id="notesInput" rows="5" placeholder="Notes"></textarea>
+            <div class="error" data-error-for="notesInput"></div>
           </div>
+
         </div>
 
         <!-- Editor buttons -->
         <div class="toolbar">
           <button class="btn btn-ghost" id="backToDashboard" type="button">Back</button>
-          <button class="btn btn-danger" id="resetEdit" type="button" title="Clear unsaved local changes. Does not affect live data.">Clear Local</button>
+          <button
+            class="btn btn-danger"
+            id="resetEdit"
+            type="button"
+            title="Clear unsaved local changes. Does not affect live data."
+          >
+            Clear Local
+          </button>
           <button class="btn btn-primary" id="saveEdit" type="button">Save</button>
         </div>
 

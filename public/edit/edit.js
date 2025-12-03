@@ -122,53 +122,53 @@ async function EDIT_getDivisionById(id) {
 
 // merge live division data with any local draft edits
 function EDIT_mergeDivision(base, local) {
-  if (!local) return base;
+  if (!local) return base
 
-  const m = { ...base };
+  const m = { ...base }
 
-  if (local.divisionName) m.divisionName = local.divisionName;
-  if (local.dean) m.deanName = local.dean;
-  if (local.chair) m.chairName = local.chair;
-  if (local.pen) m.penContact = local.pen;
-  if (local.loc) m.locRep = local.loc;
-  if (local.notes) m.notes = local.notes;
+  if (local.divisionName) m.divisionName = local.divisionName
+  if (local.dean) m.deanName = local.dean
+  if (local.chair) m.chairName = local.chair
+  if (local.pen) m.penContact = local.pen
+  if (local.loc) m.locRep = local.loc
+  if (local.notes) m.notes = local.notes
 
   // merge program list carefully so we KEEP ids from the DB
   if (Array.isArray(local.programsData)) {
-    const baseList = Array.isArray(base.programList) ? base.programList : [];
-    const byName = new Map();
+    const baseList = Array.isArray(base.programList) ? base.programList : []
+    const byName = new Map()
 
     baseList.forEach(bp => {
-      const key = (bp.programName || '').trim().toLowerCase();
-      if (!key) return;
-      if (!byName.has(key)) byName.set(key, bp);
-    });
+      const key = (bp.programName || '').trim().toLowerCase()
+      if (!key) return
+      if (!byName.has(key)) byName.set(key, bp)
+    })
 
-    const merged = [];
+    const merged = []
 
     local.programsData.forEach(lp => {
-      const key = (lp.programName || '').trim().toLowerCase();
-      const match = key && byName.get(key);
+      const key = (lp.programName || '').trim().toLowerCase()
+      const match = key && byName.get(key)
 
       if (match) {
         merged.push({
           ...match,
           ...lp,
-          id: match.id          
-        });
-        byName.delete(key);
+          id: match.id          // keep DB id
+        })
+        byName.delete(key)
       } else {
-        merged.push(lp);         
+        merged.push(lp)
       }
-    });
+    })
 
     // any DB programs that didnt have a local override
-    byName.forEach(bp => merged.push(bp));
+    byName.forEach(bp => merged.push(bp))
 
-    m.programList = merged;
+    m.programList = merged
   }
 
-  return m;
+  return m
 }
 
 
@@ -497,44 +497,42 @@ async function EDIT_toggleProgramSelected(programId, isSelected) {
 
 // build the programs and payees editor inside the division editor
 function EDIT_renderProgramsEditor(divRec) {
-  const { programsMount } = EDIT_els();
-  if (!programsMount) return;
+  const { programsMount } = EDIT_els()
+  if (!programsMount) return
 
   // helper so we always mark dirty + autosave safely
   const markDirtyAndAutosave = () => {
-    EDIT_dirty = true;
-    if (typeof EDIT_autosaveDraft === 'function') {
-      debounceSave(() => EDIT_autosaveDraft());
-    }
-  };
+    EDIT_dirty = true
+    debounceSave(() => EDIT_autosaveDraft())
+  }
 
   // clear old stuff
-  programsMount.innerHTML = '';
+  programsMount.innerHTML = ''
 
   // remove any duplicate headers and add a single Programs & Payees header
-  const parent = programsMount.parentElement;
+  const parent = programsMount.parentElement
   if (parent) {
-    parent.querySelectorAll('.programs-header').forEach(h => h.remove());
+    parent.querySelectorAll('.programs-header').forEach(h => h.remove())
 
-    const header = document.createElement('h3');
-    header.textContent = 'Programs & Payees';
-    header.className = 'section-title programs-header';
-    parent.insertBefore(header, programsMount);
+    const header = document.createElement('h3')
+    header.textContent = 'Programs & Payees'
+    header.className = 'section-title programs-header'
+    parent.insertBefore(header, programsMount)
   }
 
   // top bar with Add Program button aligned to the right
-  const topBar = document.createElement('div');
-  topBar.className = 'programs-topbar';
+  const topBar = document.createElement('div')
+  topBar.className = 'programs-topbar'
 
-  const addBtn = document.createElement('button');
-  addBtn.type = 'button';
-  addBtn.className = 'btn btn-primary add-program-btn';
-  addBtn.textContent = 'Add Program';
+  const addBtn = document.createElement('button')
+  addBtn.type = 'button'
+  addBtn.className = 'btn btn-primary add-program-btn'
+  addBtn.textContent = 'Add Program'
 
   addBtn.addEventListener('click', () => {
     divRec.programList = Array.isArray(divRec.programList)
       ? divRec.programList
-      : [];
+      : []
 
     divRec.programList.push({
       programName: 'New Program',
@@ -542,215 +540,215 @@ function EDIT_renderProgramsEditor(divRec) {
       hasBeenPaid: false,
       reportSubmitted: false,
       notes: ''
-    });
+    })
 
-    markDirtyAndAutosave();
+    markDirtyAndAutosave()
 
     // re-render and then scroll to the new card
-    EDIT_renderProgramsEditor(divRec);
+    EDIT_renderProgramsEditor(divRec)
 
     requestAnimationFrame(() => {
-      const cards = programsMount.querySelectorAll('.card');
+      const cards = programsMount.querySelectorAll('.card')
       if (cards.length) {
-        const last = cards[cards.length - 1];
-        last.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        const last = cards[cards.length - 1]
+        last.scrollIntoView({ behavior: 'smooth', block: 'start' })
       }
-    });
-  });
+    })
+  })
 
-  topBar.appendChild(addBtn);
-  programsMount.appendChild(topBar);
+  topBar.appendChild(addBtn)
+  programsMount.appendChild(topBar)
 
   // start from the divisions program list
-  const list = Array.isArray(divRec.programList) ? [...divRec.programList] : [];
+  const list = Array.isArray(divRec.programList) ? [...divRec.programList] : []
 
   // selected current-year marked for improvement programs first, then A–Z
   list.sort((a, b) => {
-    const aSel = a.id && EDIT_currentSchedule && EDIT_currentSchedule[a.id];
-    const bSel = b.id && EDIT_currentSchedule && EDIT_currentSchedule[b.id];
+    const aSel = a.id && EDIT_currentSchedule && EDIT_currentSchedule[a.id]
+    const bSel = b.id && EDIT_currentSchedule && EDIT_currentSchedule[b.id]
 
-    if (aSel && !bSel) return -1;
-    if (!aSel && bSel) return 1;
+    if (aSel && !bSel) return -1
+    if (!aSel && bSel) return 1
 
-    const aName = (a.programName || '').toLowerCase();
-    const bName = (b.programName || '').toLowerCase();
-    return aName.localeCompare(bName);
-  });
+    const aName = (a.programName || '').toLowerCase()
+    const bName = (b.programName || '').toLowerCase()
+    return aName.localeCompare(bName)
+  })
 
   // build a card for each program
   list.forEach((p, idx) => {
-    const card = document.createElement('div');
-    card.className = 'card';
-    card.style.marginBottom = '12px';
+    const card = document.createElement('div')
+    card.className = 'card'
+    card.style.marginBottom = '12px'
 
-    const title = document.createElement('div');
-    title.style.fontWeight = '700';
-    title.style.marginBottom = '6px';
-    title.textContent = `Program ${idx + 1}: ${p.programName || ''}`;
-    card.appendChild(title);
+    const title = document.createElement('div')
+    title.style.fontWeight = '700'
+    title.style.marginBottom = '6px'
+    title.textContent = `Program ${idx + 1}: ${p.programName || ''}`
+    card.appendChild(title)
 
     // badge that only shows when marked for improvement
-    const badge = document.createElement('span');
-    badge.className = 'program-improvement-badge';
-    badge.textContent = 'MARKED FOR IMPROVEMENT';
-    title.appendChild(badge);
+    const badge = document.createElement('span')
+    badge.className = 'program-improvement-badge'
+    badge.textContent = 'MARKED FOR IMPROVEMENT'
+    title.appendChild(badge)
 
-    const progId = p.id;
+    const progId = p.id
     const isSelected =
-      progId && EDIT_currentSchedule && EDIT_currentSchedule[progId];
+      progId && EDIT_currentSchedule && EDIT_currentSchedule[progId]
 
     if (isSelected) {
-      card.classList.add('improvement-selected');
-      badge.style.display = 'inline-block';
+      card.classList.add('improvement-selected')
+      badge.style.display = 'inline-block'
     } else {
-      badge.style.display = 'none';
+      badge.style.display = 'none'
     }
 
     // program name
-    const nameInput = document.createElement('input');
-    nameInput.type = 'text';
-    nameInput.value = p.programName || '';
-    nameInput.placeholder = 'Program name';
+    const nameInput = document.createElement('input')
+    nameInput.type = 'text'
+    nameInput.value = p.programName || ''
+    nameInput.placeholder = 'Program name'
     nameInput.setAttribute('data-field', 'programName')
 
     nameInput.addEventListener('input', () => {
-      p.programName = nameInput.value;
-      markDirtyAndAutosave();
-    });
+      p.programName = nameInput.value
+      markDirtyAndAutosave()
+    })
 
     // payees textarea
-    const payeesBox = document.createElement('textarea');
-    payeesBox.rows = 3;
-    payeesBox.placeholder = 'Payees (one per line: Name - Amount)';
+    const payeesBox = document.createElement('textarea')
+    payeesBox.rows = 3
+    payeesBox.placeholder = 'Payees (one per line: Name - Amount)'
     payeesBox.setAttribute('data-field', 'payees')
     payeesBox.value = (p.payees || [])
       .map(pe => `${pe.name || ''} - ${pe.amount ?? ''}`)
-      .join('\n');
+      .join('\n')
 
     payeesBox.addEventListener('input', () => {
       const rawLines = payeesBox.value
         .split('\n')
         .map(l => l.trim())
-        .filter(l => l.length > 0);
+        .filter(l => l.length > 0)
 
       p.payees = rawLines.map(line => {
-        const [nm, amtRaw] = line.split('-').map(s => (s || '').trim());
-        const amt = Number(amtRaw);
-        return { name: nm, amount: Number.isFinite(amt) ? amt : 0 };
-      });
+        const [nm, amtRaw] = line.split('-').map(s => (s || '').trim())
+        const amt = Number(amtRaw)
+        return { name: nm, amount: Number.isFinite(amt) ? amt : 0 }
+      })
 
-      markDirtyAndAutosave();
-    });
+      markDirtyAndAutosave()
+    })
 
     // row with checkboxes
-    const row = document.createElement('div');
-    row.className = 'inline-row';
+    const row = document.createElement('div')
+    row.className = 'inline-row'
 
     // Has been paid
-    const paid = document.createElement('label');
-    paid.className = 'check';
-    const paidCb = document.createElement('input');
-    paidCb.type = 'checkbox';
-    paidCb.checked = !!p.hasBeenPaid;
+    const paid = document.createElement('label')
+    paid.className = 'check'
+    const paidCb = document.createElement('input')
+    paidCb.type = 'checkbox'
+    paidCb.checked = !!p.hasBeenPaid
     paidCb.setAttribute('data-field', 'hasBeenPaid')
     paidCb.addEventListener('change', () => {
-      p.hasBeenPaid = paidCb.checked;
-      markDirtyAndAutosave();
-    });
-    paid.appendChild(paidCb);
-    paid.appendChild(document.createTextNode('Has been paid'));
+      p.hasBeenPaid = paidCb.checked
+      markDirtyAndAutosave()
+    })
+    paid.appendChild(paidCb)
+    paid.appendChild(document.createTextNode('Has been paid'))
 
     // Report submitted
-    const report = document.createElement('label');
-    report.className = 'check';
-    const reportCb = document.createElement('input');
-    reportCb.type = 'checkbox';
-    reportCb.checked = !!p.reportSubmitted;
+    const report = document.createElement('label')
+    report.className = 'check'
+    const reportCb = document.createElement('input')
+    reportCb.type = 'checkbox'
+    reportCb.checked = !!p.reportSubmitted
     reportCb.setAttribute('data-field', 'reportSubmitted')
     reportCb.addEventListener('change', () => {
-      p.reportSubmitted = reportCb.checked;
-      markDirtyAndAutosave();
-    });
-    report.appendChild(reportCb);
-    report.appendChild(document.createTextNode('Report submitted'));
+      p.reportSubmitted = reportCb.checked
+      markDirtyAndAutosave()
+    })
+    report.appendChild(reportCb)
+    report.appendChild(document.createTextNode('Report submitted'))
 
     // Marked for improvement current year
-    const sel = document.createElement('label');
-    sel.className = 'check';
-    const selCb = document.createElement('input');
-    selCb.type = 'checkbox';
-    selCb.checked = !!isSelected;
+    const sel = document.createElement('label')
+    sel.className = 'check'
+    const selCb = document.createElement('input')
+    selCb.type = 'checkbox'
+    selCb.checked = !!isSelected
 
-    sel.appendChild(selCb);
-    sel.appendChild(document.createTextNode('Marked for improvement'));
+    sel.appendChild(selCb)
+    sel.appendChild(document.createTextNode('Marked for improvement'))
 
     selCb.addEventListener('change', () => {
       if (!progId) {
         EDIT_showInfo(
           'Needs a save',
           'Save this division/program to the database first before marking it for improvement.'
-        );
-        selCb.checked = false;
-        return;
+        )
+        selCb.checked = false
+        return
       }
       if (!EDIT_currentYear) {
         EDIT_showInfo(
           'Set current year',
           'No current year is set yet on the Schedule page.'
-        );
-        selCb.checked = false;
-        return;
+        )
+        selCb.checked = false
+        return
       }
 
-      EDIT_toggleProgramSelected(progId, selCb.checked);
+      EDIT_toggleProgramSelected(progId, selCb.checked)
 
       if (selCb.checked) {
-        card.classList.add('improvement-selected');
-        badge.style.display = 'inline-block';
+        card.classList.add('improvement-selected')
+        badge.style.display = 'inline-block'
       } else {
-        card.classList.remove('improvement-selected');
-        badge.style.display = 'none';
+        card.classList.remove('improvement-selected')
+        badge.style.display = 'none'
       }
-    });
+    })
 
-    row.appendChild(paid);
-    row.appendChild(report);
-    row.appendChild(sel);
+    row.appendChild(paid)
+    row.appendChild(report)
+    row.appendChild(sel)
 
     // notes
-    const notesBox = document.createElement('textarea');
-    notesBox.rows = 2;
-    notesBox.placeholder = 'Notes';
+    const notesBox = document.createElement('textarea')
+    notesBox.rows = 2
+    notesBox.placeholder = 'Notes'
     notesBox.setAttribute('data-field', 'notes')
-    notesBox.value = p.notes || '';
+    notesBox.value = p.notes || ''
     notesBox.addEventListener('input', () => {
-      p.notes = notesBox.value;
-      markDirtyAndAutosave();
-    });
+      p.notes = notesBox.value
+      markDirtyAndAutosave()
+    })
 
     // Delete program button
-    const delBtn = document.createElement('button');
-    delBtn.type = 'button';
-    delBtn.className = 'btn btn-danger';
-    delBtn.textContent = 'Delete Program';
+    const delBtn = document.createElement('button')
+    delBtn.type = 'button'
+    delBtn.className = 'btn btn-danger'
+    delBtn.textContent = 'Delete Program'
     delBtn.addEventListener('click', () => {
-      const realIndex = divRec.programList.indexOf(p);
+      const realIndex = divRec.programList.indexOf(p)
       if (realIndex !== -1) {
-        divRec.programList.splice(realIndex, 1);
+        divRec.programList.splice(realIndex, 1)
       }
-      markDirtyAndAutosave();
-      EDIT_renderProgramsEditor(divRec);
-    });
+      markDirtyAndAutosave()
+      EDIT_renderProgramsEditor(divRec)
+    })
 
     // assemble card
-    card.appendChild(EDIT_labelWrap('', nameInput));
-    card.appendChild(EDIT_labelWrap('', payeesBox));
-    card.appendChild(row);
-    card.appendChild(EDIT_labelWrap('Notes', notesBox));
-    card.appendChild(delBtn);
+    card.appendChild(EDIT_labelWrap('Program Name', nameInput))
+    card.appendChild(EDIT_labelWrap('Payees', payeesBox))
+    card.appendChild(EDIT_labelWrap('', row))
+    card.appendChild(EDIT_labelWrap('Notes', notesBox))
+    card.appendChild(delBtn)
 
-    programsMount.appendChild(card);
-  });
+    programsMount.appendChild(card)
+  })
 }
 
 // fill top header fields with data for this division
@@ -1035,13 +1033,53 @@ function EDIT_listenSelection() {
   })
 }
 
+// listen for a program:selected event (from cards)
+// open the division editor and scroll to that program’s card
+function EDIT_listenProgramSelected() {
+  window.addEventListener('program:selected', e => {
+    const { divisionId, divisionName, programName } = e.detail || {}
+    if (!divisionId && !divisionName) return
+
+    EDIT_guardBeforeExit(async () => {
+      // open the editor for that division
+      await EDIT_openEditor(divisionId, divisionName)
+
+      if (!programName) return
+
+      // after editor is built, scroll to the matching program card
+      const { programsMount } = EDIT_els()
+      if (!programsMount) return
+
+      const cards = programsMount.querySelectorAll('.card')
+      const targetName = String(programName).trim().toLowerCase()
+
+      for (const card of cards) {
+        const nameInput = card.querySelector('[data-field="programName"]')
+        if (!nameInput) continue
+
+        const val = (nameInput.value || '').trim().toLowerCase()
+        if (val === targetName) {
+          card.scrollIntoView({ behavior: 'smooth', block: 'start' })
+          flashSavedStrong(card)
+          break
+        }
+      }
+    })
+  })
+}
+
+
+
 // start up this editor module
 async function EDIT_start() {
   EDIT_wireButtons()
   EDIT_listenSelection()
+  EDIT_listenProgramSelected()
   await EDIT_loadCurrentYear()
   await EDIT_loadCurrentSchedule()
 }
+
+
 
 // run when DOM is ready
 if (document.readyState === 'loading') {

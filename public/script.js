@@ -33,41 +33,40 @@ async function loadDivisions() {
 //  DOM READY → Load divisions + refresh UI areas
 // ============================================================================
 document.addEventListener('DOMContentLoaded', async () => {
-  console.log("Loading divisions…")
+  console.log('Loading divisions…')
 
   const base = await loadDivisions()
   const divisions = base
 
   // Expose globally so other modules can use the list
   window.DIVISIONS = divisions
-  console.log("DIVISIONS loaded:", divisions)
+  console.log('DIVISIONS loaded:', divisions)
 
   // Update card grid (center panel)
-  if (typeof window.renderCards === "function") {
-    console.log("→ renderCards() running…")
+  if (typeof window.renderCards === 'function') {
+    console.log('→ renderCards() running…')
     window.renderCards(divisions)
   }
 
   // Update left panel division list
-  if (typeof window.refreshLeftPanel === "function") {
-    console.log("→ refreshLeftPanel() running…")
+  if (typeof window.refreshLeftPanel === 'function') {
+    console.log('→ refreshLeftPanel() running…')
     window.refreshLeftPanel(divisions)
   }
 
   // Prepare global search index
-  if (typeof window.LOC_searchInit === "function") {
-    console.log("→ LOC_searchInit() running…")
+  if (typeof window.LOC_searchInit === 'function') {
+    console.log('→ LOC_searchInit() running…')
     window.LOC_searchInit(divisions)
   }
 
-  console.log("UI refreshed with updated divisions.")
+  console.log('UI refreshed with updated divisions.')
 })
 
 
 // ============================================================================
 //  Local Storage Utilities (Shared with edit.js)
 // ============================================================================
-
 function readLocal() {
   try {
     return JSON.parse(localStorage.getItem('loc_division_edits_v1') || '{}')
@@ -101,7 +100,7 @@ function mergeEdits(divs) {
     const keysToTry = [
       keyId(id),
       keyName(name),
-      name                
+      name
     ].filter(Boolean)
 
     let rec = null
@@ -154,9 +153,8 @@ function showFinalOnly() {
   const fv = document.getElementById('final-view')
   if (fv) fv.style.display = 'block'
 
-  if (fv) {
-    window.scrollTo({ top: fv.offsetTop - 10, behavior: 'smooth' })
-  }
+  
+  document.body.classList.remove('showing-final')
 
   setFinalButton(true)
 }
@@ -192,6 +190,9 @@ async function buildFinalTable() {
 
   // Read column headers to detect which layout we are rendering
   const ths = Array.from(document.querySelectorAll('#final-table thead th'))
+
+  
+  // so we use the existing first column (Division) as the control.
   const headers = ths.map(th => th.textContent.trim())
   const signature = headers.join('|').toLowerCase()
 
@@ -241,7 +242,7 @@ async function buildFinalTable() {
       list.forEach(p => {
         const payees = Array.isArray(p?.payees) ? p.payees : []
         totalPayees += payees.length
-        payees.forEach(pe => totalAmount += Number(pe.amount) || 0)
+        payees.forEach(pe => { totalAmount += Number(pe.amount) || 0 })
       })
 
       rows.push([
@@ -303,6 +304,7 @@ async function buildFinalTable() {
   tbody.innerHTML = rows
     .map(r => {
       const cells = []
+      // we only output actual data columns — no extra blank control column
       for (let i = 0; i < colCount; i++) {
         cells.push(`<td>${String(r[i] ?? '')}</td>`)
       }
@@ -310,22 +312,38 @@ async function buildFinalTable() {
     })
     .join('')
 
-  // Activate DataTables
+  // Activate DataTables + Responsive extension (arrow / row view)
   if (window.DataTable) {
     if (window.__finalTableInstance) {
       window.__finalTableInstance.destroy()
     }
 
-    window.__finalTableInstance = new DataTable('#final-table', {
+    const opts = {
       destroy: true,
       autoWidth: false,
-      scrollX: true,
-      scrollY: '55vh',
       scrollCollapse: true,
       pageLength: 25,
+      // sort by Division, and if many columns, also sort by Program
       order: [[0, 'asc']].concat(colCount > 5 ? [[5, 'asc']] : []),
-      responsive: true
-    })
+
+      // Responsive extension: use first column as control with arrow
+      responsive: {
+        details: {
+          type: 'column', 
+          target: 0       
+        }
+      },
+
+      columnDefs: [
+        {
+          targets: 0,             
+          className: 'dt-control', 
+          orderable: true
+        }
+      ]
+    }
+
+    window.__finalTableInstance = new DataTable('#final-table', opts)
   }
 }
 
