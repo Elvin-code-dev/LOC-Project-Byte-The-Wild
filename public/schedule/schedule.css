@@ -1,0 +1,230 @@
+/* ============================================================================
+   SCHEDULE PAGE LAYOUT + CARD
+   Displays the academic-year grid and controls
+   ============================================================================ */
+
+/* Page padding */
+.schedule-layout {
+  padding: 16px;
+}
+
+/* Main white card */
+.schedule-card {
+  background: #ffffff;
+  border-radius: 14px;
+  box-shadow: 0 8px 20px rgba(15, 118, 110, 0.08);
+  padding: 18px 20px 22px;
+}
+
+
+/* ============================================================================
+   HEADER SECTION (title + buttons)
+   ============================================================================ */
+
+.schedule-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  gap: 12px;
+  margin-bottom: 14px;
+}
+
+.schedule-title {
+  font-size: 1.4rem;
+  color: #14532d;
+  margin: 0 0 4px 0;
+}
+
+.schedule-subtitle {
+  font-size: 0.9rem;
+  color: #4b5563;
+  margin: 0;
+}
+
+/* Right-side control buttons */
+.schedule-controls {
+  display: flex;
+  gap: 8px;
+}
+
+/* Needed for aligning nav bar to match dashboard style */
+.header-spacer {
+  flex: 1 1 auto;
+}
+
+.navbar-links {
+  display: flex;
+  gap: 8px;
+}
+
+/* Shows when user is already on this page */
+.btn--current {
+  cursor: default;
+}
+
+
+/* ============================================================================
+   SCHEDULE TABLE (scrollable container + styling)
+   ============================================================================ */
+
+/* Horizontal scroll for smaller screens */
+.schedule-table-wrap {
+  width: 100%;
+  overflow-x: auto;
+}
+
+/* Base table */
+.schedule-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.92rem;
+}
+
+/* Header cells (years) */
+.schedule-table thead th {
+  background: #e5f4e9;
+  color: #14532d;
+  font-weight: 600;
+  padding: 6px 8px;
+  border-bottom: 2px solid #93c5aa;
+  text-align: center;
+  white-space: nowrap;
+}
+
+/* Body cells */
+.schedule-table td {
+  padding: 6px 8px;
+  border-bottom: 1px solid #e5e7eb;
+  text-align: center;
+}
+
+/* Division label row */
+.schedule-division-row td {
+  background: #f3f4f6;
+  font-weight: 600;
+  color: #111827;
+  border-top: 2px solid #d1d5db;
+}
+
+/* First column (program names) */
+.sticky-col {
+  text-align: left;
+  min-width: 260px;
+}
+
+.schedule-program-cell {
+  text-align: left;
+  color: #111827;
+}
+
+/* Year checkbox cells */
+.schedule-year-cell input[type="checkbox"] {
+  transform: scale(1.1);
+  cursor: pointer;
+}
+
+/* Tiny note under the table */
+.schedule-note {
+  margin-top: 10px;
+  font-size: 0.8rem;
+  color: #6b7280;
+}
+
+
+/* ============================================================================
+   MOBILE ADJUSTMENTS
+   ============================================================================ */
+
+@media (max-width: 768px) {
+  .schedule-head {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .schedule-controls {
+    align-self: stretch;
+    justify-content: flex-start;
+  }
+}
+
+
+/* ============================================================================
+   MODAL (blur popup used for add/remove year)
+   ============================================================================ */
+
+.schedule-modal-backdrop {
+  position: fixed;
+  inset: 0;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  background: rgba(0, 0, 0, 0.3);
+  backdrop-filter: blur(4px);
+
+  z-index: 999;
+  opacity: 0;
+  pointer-events: none;
+
+  transition: opacity 0.18s ease-out;
+}
+
+/* When opened */
+.schedule-modal-backdrop.schedule-modal--open {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+/* Modal box */
+.schedule-modal {
+  background: #ffffff;
+  border-radius: 16px;
+  padding: 18px 20px 16px;
+  max-width: 360px;
+  width: 90%;
+  box-shadow: 0 16px 40px rgba(15, 118, 110, 0.35);
+}
+
+.schedule-modal__title {
+  margin: 0 0 6px;
+  font-size: 18px;
+  font-weight: 700;
+}
+
+.schedule-modal__body {
+  margin: 0 0 10px;
+  font-size: 14px;
+}
+
+.schedule-modal__input {
+  width: 100%;
+  box-sizing: border-box;
+  margin-bottom: 12px;
+  padding: 6px 8px;
+  border-radius: 8px;
+  border: 1px solid #d1d5db;
+  font-size: 14px;
+}
+
+/* Modal buttons row */
+.schedule-modal__buttons {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+}
+
+
+/* ============================================================================
+   YEAR HEADER SPECIAL STATES
+   - current year highlight
+   - locked past years
+   ============================================================================ */
+
+.schedule-year-current {
+  font-weight: 700;
+}
+
+.schedule-year-locked {
+  opacity: 0.55;
+}

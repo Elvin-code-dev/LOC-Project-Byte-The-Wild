@@ -14,6 +14,13 @@
         "notes": "Initial Invite Sent from Julie 9/26/24. Follow up on 10/21"
       },
       {
+        "programName": "Business Administration",
+        "payees": [],
+        "hasBeenPaid": false,
+        "reportSubmitted": false,
+        "notes": "No response yet for 2024–2025 cycle. Placeholder data; update when real information is available."
+      },
+      {
         "programName": "Business Management",
         "payees": [],
         "hasBeenPaid": false,
@@ -26,6 +33,34 @@
         "hasBeenPaid": false,
         "reportSubmitted": false,
         "notes": "Initial Invite Sent from Julie 9/26/24. Follow up on 10/21"
+      },
+      {
+        "programName": "Business Technologies & Administrative Careers",
+        "payees": [],
+        "hasBeenPaid": false,
+        "reportSubmitted": false,
+        "notes": "No response yet for 2024–2025 cycle. Placeholder data; update when real information is available."
+      },
+      {
+        "programName": "Court Reporting & Captioning",
+        "payees": [],
+        "hasBeenPaid": false,
+        "reportSubmitted": false,
+        "notes": "No response yet for 2024–2025 cycle. Placeholder data; update when real information is available."
+      },
+      {
+        "programName": "Criminal Justice",
+        "payees": [],
+        "hasBeenPaid": false,
+        "reportSubmitted": false,
+        "notes": "No response yet for 2024–2025 cycle. Placeholder data; update when real information is available."
+      },
+      {
+        "programName": "Early Childhood Education",
+        "payees": [],
+        "hasBeenPaid": false,
+        "reportSubmitted": false,
+        "notes": "No response yet for 2024–2025 cycle. Placeholder data; update when real information is available."
       }
     ]
   },
@@ -66,9 +101,23 @@
     "divisionName": "Fine Arts",
     "deanName": "Christie Gilliland",
     "penContact": "Liz Peterson",
-    "locRep": "Monica Bowen",
+    "locRep": "Jessie Brugger",
     "chairName": "Paul Metevier",
     "programList": [
+      {
+        "programName": "Dance",
+        "payees": [],
+        "hasBeenPaid": false,
+        "reportSubmitted": false,
+        "notes": "No response yet for 2024–2025 cycle. Placeholder data; update when real information is available."
+      },
+      {
+        "programName": "Drama",
+        "payees": [],
+        "hasBeenPaid": false,
+        "reportSubmitted": false,
+        "notes": "No response yet for 2024–2025 cycle. Placeholder data; update when real information is available."
+      },
       {
         "programName": "Music",
         "payees": [
@@ -88,6 +137,13 @@
         "hasBeenPaid": false,
         "reportSubmitted": false,
         "notes": "Yes! Sam, Kelly, and Ruth all work on this together and divide the money three ways."
+      },
+      {
+        "programName": "Visual Arts (Photography/Art)",
+        "payees": [],
+        "hasBeenPaid": false,
+        "reportSubmitted": false,
+        "notes": "No response yet for 2024–2025 cycle. Placeholder data; update when real information is available."
       }
     ]
   },
@@ -95,9 +151,23 @@
     "divisionName": "Health Science",
     "deanName": "Lionel Candido Flores",
     "penContact": "Angie Brenner",
-    "locRep": "Thom Jackson",
+    "locRep": "Melissa Porras-Monroe",
     "chairName": "Leslie Kessler",
     "programList": [
+      {
+        "programName": "Emergency Medical Technician/Phlebotomy",
+        "payees": [],
+        "hasBeenPaid": false,
+        "reportSubmitted": false,
+        "notes": "No response yet for 2024–2025 cycle. Placeholder data; update when real information is available."
+      },
+      {
+        "programName": "Occupational Therapy Assistant",
+        "payees": [],
+        "hasBeenPaid": false,
+        "reportSubmitted": false,
+        "notes": "No response yet for 2024–2025 cycle. Placeholder data; update when real information is available."
+      },
       {
         "programName": "Physical Therapist Assistant",
         "payees": [
@@ -127,7 +197,7 @@
     "divisionName": "Humanities",
     "deanName": "Jamie Fitzgerald",
     "penContact": "Liz Peterson",
-    "locRep": "Lisa Luengo",
+    "locRep": "Matthew Cullen",
     "chairName": "Katie Cunnion",
     "programList": [
       {
@@ -135,7 +205,42 @@
         "payees": [],
         "hasBeenPaid": false,
         "reportSubmitted": false,
-        "notes": "No"
+        "notes": "No response yet for 2024–2025 cycle. Placeholder data; update when real information is available."
+      },
+      {
+        "programName": "Counseling Services",
+        "payees": [],
+        "hasBeenPaid": false,
+        "reportSubmitted": false,
+        "notes": "No response yet for 2024–2025 cycle. Placeholder data; update when real information is available."
+      },
+      {
+        "programName": "Foreign Languages",
+        "payees": [],
+        "hasBeenPaid": false,
+        "reportSubmitted": false,
+        "notes": "No response yet for 2024–2025 cycle. Placeholder data; update when real information is available."
+      },
+      {
+        "programName": "Information Literacy",
+        "payees": [],
+        "hasBeenPaid": false,
+        "reportSubmitted": false,
+        "notes": "No response yet for 2024–2025 cycle. Placeholder data; update when real information is available."
+      },
+      {
+        "programName": "Journalism",
+        "payees": [],
+        "hasBeenPaid": false,
+        "reportSubmitted": false,
+        "notes": "No response yet for 2024–2025 cycle. Placeholder data; update when real information is available."
+      },
+      {
+        "programName": "Philosophy",
+        "payees": [],
+        "hasBeenPaid": false,
+        "reportSubmitted": false,
+        "notes": "No response yet for 2024–2025 cycle. Placeholder data; update when real information is available."
       }
     ]
   },
@@ -143,11 +248,11 @@
     "divisionName": "Science",
     "deanName": "Miebeth Bustillo-Booth",
     "penContact": "Heather Lambert",
-    "locRep": "Nicole Feider",
+    "locRep": "Leo Studach",
     "chairName": "Katy Shaw and Danny Najera",
     "programList": [
       {
-        "programName": "Anatomy and Physiology",
+        "programName": "Anatomy & Physiology",
         "payees": [],
         "hasBeenPaid": false,
         "reportSubmitted": false,
@@ -166,11 +271,25 @@
         "notes": "Yes, they are doing a 2-year project with majors level Bio classes"
       },
       {
+        "programName": "Chemistry",
+        "payees": [],
+        "hasBeenPaid": false,
+        "reportSubmitted": false,
+        "notes": "No response yet for 2024–2025 cycle. Placeholder data; update when real information is available."
+      },
+      {
         "programName": "Geology/Oceanography",
         "payees": [],
         "hasBeenPaid": false,
         "reportSubmitted": false,
         "notes": "Initial Invite Sent from Julie 9/26/24. Follow up on 10/21 and 11/20"
+      },
+      {
+        "programName": "Physics/Astronomy",
+        "payees": [],
+        "hasBeenPaid": false,
+        "reportSubmitted": false,
+        "notes": "No response yet for 2024–2025 cycle. Placeholder data; update when real information is available."
       }
     ]
   },
@@ -181,6 +300,13 @@
     "locRep": "Joy Crawford",
     "chairName": "Mark Thomason",
     "programList": [
+      {
+        "programName": "American Ethnic & Minority Studies",
+        "payees": [],
+        "hasBeenPaid": false,
+        "reportSubmitted": false,
+        "notes": "No response yet for 2024–2025 cycle. Placeholder data; update when real information is available."
+      },
       {
         "programName": "Anthropology",
         "payees": [
@@ -198,11 +324,25 @@
         "notes": "Yes! Joy and Madeleine (Madeleine gets paid, Joy is a mentor)"
       },
       {
+        "programName": "Economics",
+        "payees": [],
+        "hasBeenPaid": false,
+        "reportSubmitted": false,
+        "notes": "No response yet for 2024–2025 cycle. Placeholder data; update when real information is available."
+      },
+      {
+        "programName": "Geography",
+        "payees": [],
+        "hasBeenPaid": false,
+        "reportSubmitted": false,
+        "notes": "No response yet for 2024–2025 cycle. Placeholder data; update when real information is available."
+      },
+      {
         "programName": "History",
         "payees": [],
         "hasBeenPaid": false,
         "reportSubmitted": false,
-        "notes": "No for this round"
+        "notes": "No response yet for 2024–2025 cycle. Placeholder data; update when real information is available."
       },
       {
         "programName": "Political Science",
@@ -235,6 +375,13 @@
         "hasBeenPaid": false,
         "reportSubmitted": true,
         "notes": "Yes! Joy and Jerry will do a project together"
+      },
+      {
+        "programName": "Sociology",
+        "payees": [],
+        "hasBeenPaid": false,
+        "reportSubmitted": false,
+        "notes": "No response yet for 2024–2025 cycle. Placeholder data; update when real information is available."
       }
     ]
   },
@@ -242,7 +389,7 @@
     "divisionName": "Technology",
     "deanName": "Lea Ann Simpson",
     "penContact": "Angie Brenner",
-    "locRep": "Josh Archer",
+    "locRep": "Vance Graham",
     "chairName": "Michael Wood",
     "programList": [
       {
@@ -270,11 +417,32 @@
         "notes": "Yes! Seunghye Jeng"
       },
       {
+        "programName": "Engineering/Computer Science",
+        "payees": [],
+        "hasBeenPaid": false,
+        "reportSubmitted": false,
+        "notes": "No response yet for 2024–2025 cycle. Placeholder data; update when real information is available."
+      },
+      {
+        "programName": "Information Technology",
+        "payees": [],
+        "hasBeenPaid": false,
+        "reportSubmitted": false,
+        "notes": "No response yet for 2024–2025 cycle. Placeholder data; update when real information is available."
+      },
+      {
         "programName": "Natural Resources",
         "payees": [],
         "hasBeenPaid": false,
         "reportSubmitted": false,
         "notes": "Can't this year due to so many faculty in their department in the tenure process."
+      },
+      {
+        "programName": "Water/Wastewater Technology",
+        "payees": [],
+        "hasBeenPaid": false,
+        "reportSubmitted": false,
+        "notes": "No response yet for 2024–2025 cycle. Placeholder data; update when real information is available."
       }
     ]
   },
@@ -293,11 +461,32 @@
         "notes": "Initial Invite Sent from Julie 9/26/24. Follow up on 10/21"
       },
       {
+        "programName": "Carpentry",
+        "payees": [],
+        "hasBeenPaid": false,
+        "reportSubmitted": false,
+        "notes": "No response yet for 2024–2025 cycle. Placeholder data; update when real information is available."
+      },
+      {
         "programName": "Manufacturing",
         "payees": [],
         "hasBeenPaid": false,
         "reportSubmitted": false,
         "notes": "Yes! The Manufacturing program (Bradley Chin - lead) will participate in the Program Outcomes Assessment this year"
+      },
+      {
+        "programName": "Mechatronics",
+        "payees": [],
+        "hasBeenPaid": false,
+        "reportSubmitted": false,
+        "notes": "No response yet for 2024–2025 cycle. Placeholder data; update when real information is available."
+      },
+      {
+        "programName": "Welding Technology",
+        "payees": [],
+        "hasBeenPaid": false,
+        "reportSubmitted": false,
+        "notes": "No response yet for 2024–2025 cycle. Placeholder data; update when real information is available."
       }
     ]
   },
@@ -305,15 +494,68 @@
     "divisionName": "Transitional Studies",
     "deanName": "Lionel Candido Flores",
     "penContact": "Mary Singer",
-    "locRep": "Thom Jackson",
+    "locRep": "Amanda Walsh",
     "chairName": "David Lewis",
     "programList": [
+      {
+        "programName": "Adult Basic Education / ESL Pathways",
+        "payees": [],
+        "hasBeenPaid": false,
+        "reportSubmitted": false,
+        "notes": "Placeholder program representing ABE/ESL-style pathways. Update with real program titles as needed."
+      },
       {
         "programName": "Health and Physical Education",
         "payees": [],
         "hasBeenPaid": false,
         "reportSubmitted": false,
         "notes": "Not this time around"
+      },
+      {
+        "programName": "High School Completion",
+        "payees": [],
+        "hasBeenPaid": false,
+        "reportSubmitted": false,
+        "notes": "No response yet for 2024–2025 cycle. Placeholder data; update when real information is available."
+      },
+      {
+        "programName": "Open Doors (IGrad)",
+        "payees": [],
+        "hasBeenPaid": false,
+        "reportSubmitted": false,
+        "notes": "No response yet for 2024–2025 cycle. Placeholder data; update when real information is available."
+      }
+    ]
+  },
+  {
+    "divisionName": "Mathematics",
+    "deanName": "Miebeth Bustillo-Booth",
+    "penContact": "Liz Peterson",
+    "locRep": "Michele Wallace",
+    "chairName": "Allison Beckwith",
+    "programList": [
+      {
+        "programName": "Mathematics",
+        "payees": [],
+        "hasBeenPaid": false,
+        "reportSubmitted": false,
+        "notes": "No response yet for 2024–2025 cycle. Placeholder data; update when real information is available."
+      }
+    ]
+  },
+  {
+    "divisionName": "Continuing Education",
+    "deanName": "Christie Gilliland",
+    "penContact": "Liz Peterson",
+    "locRep": "TBD – Continuing Education LOC Rep",
+    "chairName": "Continuing Education Director",
+    "programList": [
+      {
+        "programName": "Continuing Education (CE)",
+        "payees": [],
+        "hasBeenPaid": false,
+        "reportSubmitted": false,
+        "notes": "Generic placeholder for Continuing Education offerings. Expand into multiple programs/strands as needed."
       }
     ]
   }

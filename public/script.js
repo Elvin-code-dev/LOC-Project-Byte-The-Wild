@@ -1,11 +1,18 @@
-// script.js wires up the main dashboard
-// it loads divisions, merges local edits, and builds the View Final table
+// ============================================================================
+//  script.js — Main Dashboard Controller
+//  - Loads divisions from the server
+//  - Applies local edits from edit.js
+//  - Refreshes: cards, left panel, global search
+//  - Builds and shows the “Final View” table
+// ============================================================================
 
-let cacheDivisions = null
-let isFinalVisible = false
+let cacheDivisions = null       // cache of divisions to avoid refetch
+let isFinalVisible = false      // tracks if final table is currently shown
 
-/* load division data from the API or from local JSON */
 
+// ============================================================================
+//  Load Divisions (Live API → fallback to JSON)
+// ============================================================================
 async function loadDivisions() {
   if (cacheDivisions) return cacheDivisions
 
@@ -21,15 +28,45 @@ async function loadDivisions() {
   return cacheDivisions
 }
 
-/* once DOM is ready share divisions as window.DIVISIONS so other scripts can use it */
 
+// ============================================================================
+//  DOM READY → Load divisions + refresh UI areas
+// ============================================================================
 document.addEventListener('DOMContentLoaded', async () => {
-  const divisions = await loadDivisions()
+  console.log("Loading divisions…")
+
+  const base = await loadDivisions()
+  const divisions = base
+
+  // Expose globally so other modules can use the list
   window.DIVISIONS = divisions
-  console.log('Loaded divisions:', divisions)
+  console.log("DIVISIONS loaded:", divisions)
+
+  // Update card grid (center panel)
+  if (typeof window.renderCards === "function") {
+    console.log("→ renderCards() running…")
+    window.renderCards(divisions)
+  }
+
+  // Update left panel division list
+  if (typeof window.refreshLeftPanel === "function") {
+    console.log("→ refreshLeftPanel() running…")
+    window.refreshLeftPanel(divisions)
+  }
+
+  // Prepare global search index
+  if (typeof window.LOC_searchInit === "function") {
+    console.log("→ LOC_searchInit() running…")
+    window.LOC_searchInit(divisions)
+  }
+
+  console.log("UI refreshed with updated divisions.")
 })
 
-/* read local edits store used by edit.js */
+
+// ============================================================================
+//  Local Storage Utilities (Shared with edit.js)
+// ============================================================================
 
 function readLocal() {
   try {
@@ -39,22 +76,21 @@ function readLocal() {
   }
 }
 
-/* build key based on id for local storage */
-
 function keyId(id) {
   const n = Number(id)
   return Number.isFinite(n) && n > 0 ? `id:${n}` : null
 }
-
-/* build key based on division name for local storage */
 
 function keyName(name) {
   const s = String(name || '').trim().toLowerCase()
   return s ? `name:${s}` : null
 }
 
-/* merge local edits on top of live division data */
 
+// ============================================================================
+//  Merge Local Edits Onto Live Divisions
+//  (Used for final table + dashboard accuracy)
+// ============================================================================
 function mergeEdits(divs) {
   const store = readLocal()
 
@@ -65,7 +101,7 @@ function mergeEdits(divs) {
     const keysToTry = [
       keyId(id),
       keyName(name),
-      name   // older format that used raw name as key
+      name                
     ].filter(Boolean)
 
     let rec = null
@@ -93,8 +129,10 @@ function mergeEdits(divs) {
   })
 }
 
-/* show only cards grid on the page */
 
+// ============================================================================
+//  Dashboard View Switchers
+// ============================================================================
 function showCardsOnly() {
   document.getElementById('cards-wrap')?.classList.remove('hidden')
 
@@ -106,8 +144,6 @@ function showCardsOnly() {
 
   setFinalButton(false)
 }
-
-/* show only final table on the page */
 
 function showFinalOnly() {
   document.getElementById('cards-wrap')?.classList.add('hidden')
@@ -125,16 +161,16 @@ function showFinalOnly() {
   setFinalButton(true)
 }
 
-/* update the label on the view final button */
-
 function setFinalButton(active) {
   const btn = document.getElementById('view-final-btn')
   isFinalVisible = !!active
   if (btn) btn.textContent = active ? 'Back to Dashboard' : 'View Final'
 }
 
-/* format a number as dollars for the rollup view */
 
+// ============================================================================
+//  Money Formatter (used in final summary table)
+// ============================================================================
 function dollar(n) {
   const num = Number(n)
   if (!isFinite(num)) return ''
@@ -145,13 +181,16 @@ function dollar(n) {
   })
 }
 
-/* build the final summary table based on header layout */
 
+// ============================================================================
+//  Build the "Final View" DataTable
+//  This detects the table layout based on the <thead> header names.
+// ============================================================================
 async function buildFinalTable() {
   const base = await loadDivisions()
   const divisions = mergeEdits(base)
 
-  // read header columns and build a signature string
+  // Read column headers to detect which layout we are rendering
   const ths = Array.from(document.querySelectorAll('#final-table thead th'))
   const headers = ths.map(th => th.textContent.trim())
   const signature = headers.join('|').toLowerCase()
@@ -160,8 +199,9 @@ async function buildFinalTable() {
   if (!tbody) throw new Error('final-table not found')
 
   const rows = []
+  const colCount = headers.length
 
-  // layout A full detail with PEN and LOC
+  // Full layout with PEN + LOC
   if (signature === 'division|dean|chair|pen|loc|program|payees|paid|report|notes') {
     divisions.forEach(d => {
       const list = Array.isArray(d.programList) && d.programList.length
@@ -169,9 +209,7 @@ async function buildFinalTable() {
         : [null]
 
       list.forEach(p => {
-        const payees = p?.payees
-          ? p.payees.map(pe => pe.name).join(', ')
-          : ''
+        const payees = p?.payees ? p.payees.map(pe => pe.name).join(', ') : ''
         const paid = p ? (p.hasBeenPaid ? 'Yes' : 'No') : ''
         const report = p ? (p.reportSubmitted ? 'Yes' : 'No') : ''
 
@@ -190,10 +228,12 @@ async function buildFinalTable() {
       })
     })
   }
-  // layout B roll up view with total payees and total dollars
+
+  // Roll-up layout with totals
   else if (signature === 'division|dean|pen|loc|chair|# programs|total payees|total $') {
     divisions.forEach(d => {
       const list = Array.isArray(d.programList) ? d.programList : []
+
       const numPrograms = list.length
       let totalPayees = 0
       let totalAmount = 0
@@ -201,9 +241,7 @@ async function buildFinalTable() {
       list.forEach(p => {
         const payees = Array.isArray(p?.payees) ? p.payees : []
         totalPayees += payees.length
-        payees.forEach(pe => {
-          totalAmount += Number(pe.amount) || 0
-        })
+        payees.forEach(pe => totalAmount += Number(pe.amount) || 0)
       })
 
       rows.push([
@@ -218,7 +256,8 @@ async function buildFinalTable() {
       ])
     })
   }
-  // layout C same as A but without PEN and LOC columns
+
+  // Layout without PEN/LOC
   else if (signature === 'division|dean|chair|program|payees|paid|report|notes') {
     divisions.forEach(d => {
       const list = Array.isArray(d.programList) && d.programList.length
@@ -226,9 +265,7 @@ async function buildFinalTable() {
         : [null]
 
       list.forEach(p => {
-        const payees = p?.payees
-          ? p.payees.map(pe => pe.name).join(', ')
-          : ''
+        const payees = p?.payees ? p.payees.map(pe => pe.name).join(', ') : ''
         const paid = p ? (p.hasBeenPaid ? 'Yes' : 'No') : ''
         const report = p ? (p.reportSubmitted ? 'Yes' : 'No') : ''
 
@@ -245,7 +282,8 @@ async function buildFinalTable() {
       })
     })
   }
-  // fallback layout only shows division and program name
+
+  // Minimal fallback layout
   else {
     divisions.forEach(d => {
       const list = Array.isArray(d.programList) && d.programList.length
@@ -261,9 +299,7 @@ async function buildFinalTable() {
     })
   }
 
-  // paint rows to tbody to match current header count
-  const colCount = headers.length
-
+  // Paint table body
   tbody.innerHTML = rows
     .map(r => {
       const cells = []
@@ -274,13 +310,13 @@ async function buildFinalTable() {
     })
     .join('')
 
-  // set up DataTable if library is loaded
+  // Activate DataTables
   if (window.DataTable) {
     if (window.__finalTableInstance) {
       window.__finalTableInstance.destroy()
     }
 
-    const opts = {
+    window.__finalTableInstance = new DataTable('#final-table', {
       destroy: true,
       autoWidth: false,
       scrollX: true,
@@ -289,14 +325,14 @@ async function buildFinalTable() {
       pageLength: 25,
       order: [[0, 'asc']].concat(colCount > 5 ? [[5, 'asc']] : []),
       responsive: true
-    }
-
-    window.__finalTableInstance = new DataTable('#final-table', opts)
+    })
   }
 }
 
-/* handle clicks on View Final button */
 
+// ============================================================================
+//  Event Handlers
+// ============================================================================
 function onViewFinalClick() {
   if (isFinalVisible) {
     showCardsOnly()
@@ -311,16 +347,16 @@ function onViewFinalClick() {
     })
 }
 
-/* when a division is selected hide the final view */
-
 function onDivisionSelected() {
   document.getElementById('cards-wrap')?.classList.add('hidden')
   const fv = document.getElementById('final-view')
   if (fv) fv.style.display = 'none'
 }
 
-/* wire up events for main buttons and global events */
 
+// ============================================================================
+//  Wire Up Button + Events
+// ============================================================================
 function wire() {
   const btn = document.getElementById('view-final-btn')
   if (btn) btn.addEventListener('click', onViewFinalClick)
@@ -328,8 +364,7 @@ function wire() {
   window.addEventListener('division:selected', onDivisionSelected)
 }
 
-/* start wiring when DOM is ready */
-
+// Start wiring
 if (document.readyState === 'loading') {
   document.addEventListener('DOMContentLoaded', wire)
 } else {

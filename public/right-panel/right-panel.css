@@ -1,50 +1,67 @@
-/* styles for the right recent changes panel */
+/* ============================================================================
+   RIGHT PANEL – Recent Changes Sidebar
+   Houses the timeline of recent edits on the right side of the dashboard.
+   ============================================================================ */
 
+/* Main container */
 .right-panel {
   inline-size: 340px;
   background: #ffffff;
   border-radius: 12px;
-  box-shadow: 0 4px 18px rgba(0, 0, 0, 0.08);
-  padding: 16px 18px;
   border: 1px solid #e2eee2;
+  padding: 16px 18px;
   overflow: hidden;
+  box-shadow: 0 4px 18px rgba(0, 0, 0, 0.08);
+
   transition: all 0.25s ease;
 }
 
-/* collapsed state when the panel is hidden */
+/* Collapsed (hidden) state */
 .right-panel.is-collapsed {
   inline-size: 0;
   opacity: 0;
-  transform: translateX(8px);
   padding: 0;
   margin: 0;
   border: 0;
+  transform: translateX(8px);
   pointer-events: none;
 }
 
-/* panel title */
+
+/* ============================================================================
+   HEADER (title)
+   ============================================================================ */
 .right-panel h2 {
   margin: 0 0 14px;
-  font-weight: 800;
-  color: var(--primary);
-  font-size: 1.2rem;
-  letter-spacing: 0.2px;
-  border-bottom: 2px solid rgba(45, 138, 49, 0.25);
   padding-bottom: 6px;
+
+  font-size: 1.2rem;
+  font-weight: 800;
+  letter-spacing: 0.2px;
+  color: var(--primary);
+
+  border-bottom: 2px solid rgba(45, 138, 49, 0.25);
 }
 
-/* list of changes shown as a vertical timeline */
+
+/* ============================================================================
+   LIST OF CHANGES (timeline)
+   ============================================================================ */
+
+/* Vertical stacked list */
 .change-list {
   list-style: none;
   padding: 0;
   margin: 0;
+
   display: flex;
   flex-direction: column;
   gap: 12px;
+
   position: relative;
 }
 
-/* faint vertical line down the list */
+/* Shared vertical line */
 .change-list::before {
   content: "";
   position: absolute;
@@ -52,22 +69,26 @@
   top: 4px;
   bottom: 4px;
   width: 2px;
+
   background: rgba(45, 138, 49, 0.25);
   border-radius: 2px;
 }
 
-/* single change item */
+/* Individual change card */
 .change-list li {
   position: relative;
-  background: linear-gradient(180deg, #f9fbf9, #f3f9f4);
-  border-radius: 10px;
+
   padding: 10px 12px 10px 26px;
+  border-radius: 10px;
   border: 1px solid rgba(45, 138, 49, 0.15);
+
+  background: linear-gradient(180deg, #f9fbf9, #f3f9f4);
   box-shadow: 0 1px 6px rgba(0, 0, 0, 0.04);
+
   transition: transform 0.15s ease, box-shadow 0.18s ease;
 }
 
-/* small circle bullet next to each item */
+/* Dot next to each timeline item */
 .change-list li::before {
   content: "";
   position: absolute;
@@ -75,53 +96,58 @@
   top: 14px;
   width: 8px;
   height: 8px;
+
   background: var(--primary);
   border-radius: 50%;
+
   box-shadow: 0 0 0 3px rgba(45, 138, 49, 0.15);
 }
 
-/* hover effect for each item */
+/* Hover lift effect */
 .change-list li:hover {
   transform: translateY(-2px);
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
   background: #ffffff;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
 }
 
-/* division name */
+
+/* ============================================================================
+   TEXT INSIDE CHANGE ITEMS
+   ============================================================================ */
+
+/* Division name */
 .change-list strong {
-  display: inline-block;
   font-weight: 700;
   color: var(--primary);
   min-width: 90px;
+  display: inline-block;
 }
 
-/* programs and payees text */
+/* Summary text (“Fields changed: …”) */
 .change-list .to {
   font-weight: 600;
   color: #1f2d1f;
 }
 
-/* time text like 2 h ago */
+/* “2 h ago” timestamp */
 .change-list .when {
-  display: block;
   margin-top: 4px;
   font-size: 0.85rem;
   color: #6b786b;
+  display: block;
 }
 
-.change-list .when .by {
-  font-weight: 600;
-  color: #2d8a31;
-}
 
-/* scroll container inside the panel */
+/* ============================================================================
+   SCROLL AREA INSIDE PANEL
+   ============================================================================ */
 .rp-body {
   max-block-size: calc(100vh - 140px);
   overflow-y: auto;
   padding-right: 4px;
 }
 
-/* small scrollbar style */
+/* Scrollbar styling */
 .rp-body::-webkit-scrollbar {
   width: 6px;
 }
@@ -135,13 +161,18 @@
   background: rgba(45, 138, 49, 0.45);
 }
 
-/* mobile behavior when panel is fixed on the side */
+
+/* ============================================================================
+   MOBILE LAYOUT
+   The panel becomes a sliding drawer overlay.
+   ============================================================================ */
 @media (max-width: 900px) {
   .right-panel {
     position: fixed;
-    right: 0;
     top: 64px;
+    right: 0;
     bottom: 0;
+
     width: min(92vw, 340px);
     z-index: 30;
   }
@@ -151,4 +182,31 @@
     opacity: 0;
     pointer-events: none;
   }
+}
+
+
+/* ============================================================================
+   HEAD ROW INSIDE EACH ITEM
+   (Division name left, time right)
+   ============================================================================ */
+.change-list .rc-head {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* Override timestamp positioning inside header */
+.change-list .rc-head .when {
+  margin: 0 0 0 auto;
+  font-size: 0.82rem;
+}
+
+
+/* ============================================================================
+   NOTES PREVIEW (optional)
+   ============================================================================ */
+.change-list .rc-notes {
+  margin-top: 4px;
+  font-size: 0.85rem;
+  color: #4b5c4b;
 }

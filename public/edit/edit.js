@@ -1,4 +1,4 @@
-// edit.js handles the division editor on the right side
+// edit.js handles the division editor 
 // it loads division data, merges local drafts, validates fields, and saves to the database
 // had allot of help from ai and google to make this work
 
@@ -7,11 +7,28 @@ const EDIT_DEBOUNCE_MS = 700
 let EDIT_divisionsCache = null
 let EDIT_autosaveTimer = null
 let EDIT_dirty = false  // tracks if there are unsaved changes
+let EDIT_currentYear = null
+let EDIT_currentSchedule = null  
 
-// wait a short time before autosaving after a change
+
+// wait a short time before autosaving after a change needed to add this 
 function debounceSave(fn) {
   clearTimeout(EDIT_autosaveTimer)
   EDIT_autosaveTimer = setTimeout(fn, EDIT_DEBOUNCE_MS)
+}
+
+// show an info modal message (or alert fallback bascilly )  
+function EDIT_showInfo(title, message) {
+  if (window.LOC_HUD && typeof window.LOC_HUD.openModal === 'function') {
+    window.LOC_HUD.openModal({
+      title,
+      message,
+      confirmLabel: 'OK',
+      cancelLabel: 'Close'
+    })
+  } else {
+    alert(message)
+  }
 }
 
 // short helper for single element
@@ -105,20 +122,55 @@ async function EDIT_getDivisionById(id) {
 
 // merge live division data with any local draft edits
 function EDIT_mergeDivision(base, local) {
-  if (!local) return base
+  if (!local) return base;
 
-  const m = { ...base }
+  const m = { ...base };
 
-  if (local.divisionName) m.divisionName = local.divisionName
-  if (local.dean) m.deanName = local.dean
-  if (local.chair) m.chairName = local.chair
-  if (local.pen) m.penContact = local.pen
-  if (local.loc) m.locRep = local.loc
-  if (local.notes) m.notes = local.notes
-  if (Array.isArray(local.programsData)) m.programList = local.programsData
+  if (local.divisionName) m.divisionName = local.divisionName;
+  if (local.dean) m.deanName = local.dean;
+  if (local.chair) m.chairName = local.chair;
+  if (local.pen) m.penContact = local.pen;
+  if (local.loc) m.locRep = local.loc;
+  if (local.notes) m.notes = local.notes;
 
-  return m
+  // merge program list carefully so we KEEP ids from the DB
+  if (Array.isArray(local.programsData)) {
+    const baseList = Array.isArray(base.programList) ? base.programList : [];
+    const byName = new Map();
+
+    baseList.forEach(bp => {
+      const key = (bp.programName || '').trim().toLowerCase();
+      if (!key) return;
+      if (!byName.has(key)) byName.set(key, bp);
+    });
+
+    const merged = [];
+
+    local.programsData.forEach(lp => {
+      const key = (lp.programName || '').trim().toLowerCase();
+      const match = key && byName.get(key);
+
+      if (match) {
+        merged.push({
+          ...match,
+          ...lp,
+          id: match.id          
+        });
+        byName.delete(key);
+      } else {
+        merged.push(lp);         
+      }
+    });
+
+    // any DB programs that didnt have a local override
+    byName.forEach(bp => merged.push(bp));
+
+    m.programList = merged;
+  }
+
+  return m;
 }
+
 
 // quick way to grab all key elements used in the editor
 function EDIT_els() {
@@ -385,166 +437,320 @@ function EDIT_labelWrap(text, el, full = true) {
   return w
 }
 
+async function EDIT_loadCurrentYear() {
+  try {
+    const r = await fetch('/api/years')
+    if (!r.ok) return
+    const years = await r.json()
+    EDIT_currentYear = years.find(
+      y => y.is_current === 1 || y.is_current === true
+    ) || null
+  } catch (err) {
+    console.error('EDIT_loadCurrentYear error', err)
+  }
+}
+
+async function EDIT_loadCurrentSchedule() {
+  if (!EDIT_currentYear) {
+    EDIT_currentSchedule = null
+    return
+  }
+  try {
+    const r = await fetch(`/api/schedule?yearId=${EDIT_currentYear.id}`)
+    if (!r.ok) throw 0
+    const rows = await r.json()
+    const map = {}
+    rows.forEach(row => {
+      if ((row.is_selected === 1 || row.is_selected === true) && row.program_id) {
+        map[row.program_id] = true
+      }
+    })
+    EDIT_currentSchedule = map
+  } catch (err) {
+    console.error('EDIT_loadCurrentSchedule error', err)
+    EDIT_currentSchedule = null
+  }
+}
+
+async function EDIT_toggleProgramSelected(programId, isSelected) {
+  if (!EDIT_currentYear) return
+  try {
+    const r = await fetch('/api/schedule', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        academic_year_id: EDIT_currentYear.id,
+        program_id: programId,
+        is_selected: !!isSelected
+      })
+    })
+    if (!r.ok) throw 0
+    const row = await r.json()
+    if (!EDIT_currentSchedule) EDIT_currentSchedule = {}
+    EDIT_currentSchedule[programId] = !!row.is_selected
+  } catch (err) {
+    console.error('EDIT_toggleProgramSelected error', err)
+    EDIT_showInfo('Save problem', 'Could not update selected status.')
+  }
+}
+
+
 // build the programs and payees editor inside the division editor
 function EDIT_renderProgramsEditor(divRec) {
-  const { programsMount } = EDIT_els()
-  programsMount.innerHTML = ''
+  const { programsMount } = EDIT_els();
+  if (!programsMount) return;
 
-  // remove any old text headers that the HTML might have
-  $$('h3, h2').forEach(h => {
-    const t = (h.textContent || '').trim().toLowerCase()
-    if (
-      t === 'programs and payees' &&
-      h.parentElement === programsMount.parentElement
-    ) {
-      h.remove()
+  // helper so we always mark dirty + autosave safely
+  const markDirtyAndAutosave = () => {
+    EDIT_dirty = true;
+    if (typeof EDIT_autosaveDraft === 'function') {
+      debounceSave(() => EDIT_autosaveDraft());
     }
-  })
+  };
 
-  // keep one nice styled header
-  let heading = document.getElementById('programsTitle')
-  if (!heading) {
-    heading = document.createElement('h3')
-    heading.id = 'programsTitle'
-    heading.className = 'section-title'
-    heading.textContent = 'Programs & Payees'
-    programsMount.appendChild(heading)
-  } else {
-    heading.classList.add('section-title')
-    heading.textContent = 'Programs & Payees'
+  // clear old stuff
+  programsMount.innerHTML = '';
+
+  // remove any duplicate headers and add a single Programs & Payees header
+  const parent = programsMount.parentElement;
+  if (parent) {
+    parent.querySelectorAll('.programs-header').forEach(h => h.remove());
+
+    const header = document.createElement('h3');
+    header.textContent = 'Programs & Payees';
+    header.className = 'section-title programs-header';
+    parent.insertBefore(header, programsMount);
   }
 
-  const list = Array.isArray(divRec?.programList) ? divRec.programList : []
-  const wrap = document.createElement('div')
+  // top bar with Add Program button aligned to the right
+  const topBar = document.createElement('div');
+  topBar.className = 'programs-topbar';
 
-  // top bar with add program button
-  const topBar = document.createElement('div')
-  topBar.className = 'toolbar'
-
-  const addBtn = document.createElement('button')
-  addBtn.className = 'btn btn-ghost'
-  addBtn.textContent = 'Add Program'
+  const addBtn = document.createElement('button');
+  addBtn.type = 'button';
+  addBtn.className = 'btn btn-primary add-program-btn';
+  addBtn.textContent = 'Add Program';
 
   addBtn.addEventListener('click', () => {
-    divRec.programList = divRec.programList || []
+    divRec.programList = Array.isArray(divRec.programList)
+      ? divRec.programList
+      : [];
+
     divRec.programList.push({
       programName: 'New Program',
       payees: [],
       hasBeenPaid: false,
       reportSubmitted: false,
       notes: ''
-    })
-    EDIT_dirty = true
-    EDIT_renderProgramsEditor(divRec)
-    EDIT_autosaveDraft()
-  })
+    });
 
-  topBar.appendChild(addBtn)
-  programsMount.appendChild(topBar)
+    markDirtyAndAutosave();
+
+    // re-render and then scroll to the new card
+    EDIT_renderProgramsEditor(divRec);
+
+    requestAnimationFrame(() => {
+      const cards = programsMount.querySelectorAll('.card');
+      if (cards.length) {
+        const last = cards[cards.length - 1];
+        last.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+    });
+  });
+
+  topBar.appendChild(addBtn);
+  programsMount.appendChild(topBar);
+
+  // start from the divisions program list
+  const list = Array.isArray(divRec.programList) ? [...divRec.programList] : [];
+
+  // selected current-year marked for improvement programs first, then A–Z
+  list.sort((a, b) => {
+    const aSel = a.id && EDIT_currentSchedule && EDIT_currentSchedule[a.id];
+    const bSel = b.id && EDIT_currentSchedule && EDIT_currentSchedule[b.id];
+
+    if (aSel && !bSel) return -1;
+    if (!aSel && bSel) return 1;
+
+    const aName = (a.programName || '').toLowerCase();
+    const bName = (b.programName || '').toLowerCase();
+    return aName.localeCompare(bName);
+  });
 
   // build a card for each program
   list.forEach((p, idx) => {
-    const card = document.createElement('div')
-    card.className = 'card'
-    card.style.marginBottom = '12px'
+    const card = document.createElement('div');
+    card.className = 'card';
+    card.style.marginBottom = '12px';
 
-    const title = document.createElement('div')
-    title.style.fontWeight = '700'
-    title.style.marginBottom = '6px'
-    title.textContent = `Program ${idx + 1}: ${p.programName || ''}`
-    card.appendChild(title)
+    const title = document.createElement('div');
+    title.style.fontWeight = '700';
+    title.style.marginBottom = '6px';
+    title.textContent = `Program ${idx + 1}: ${p.programName || ''}`;
+    card.appendChild(title);
 
-    const nameInput = document.createElement('input')
-    nameInput.type = 'text'
-    nameInput.value = p.programName || ''
-    nameInput.placeholder = 'Program name'
-    nameInput.dataset.field = 'programName'
+    // badge that only shows when marked for improvement
+    const badge = document.createElement('span');
+    badge.className = 'program-improvement-badge';
+    badge.textContent = 'MARKED FOR IMPROVEMENT';
+    title.appendChild(badge);
 
-    const payeesBox = document.createElement('textarea')
-    payeesBox.rows = 3
-    payeesBox.placeholder = 'Payees (one per line: Name - Amount)'
-    payeesBox.dataset.field = 'payees'
+    const progId = p.id;
+    const isSelected =
+      progId && EDIT_currentSchedule && EDIT_currentSchedule[progId];
+
+    if (isSelected) {
+      card.classList.add('improvement-selected');
+      badge.style.display = 'inline-block';
+    } else {
+      badge.style.display = 'none';
+    }
+
+    // program name
+    const nameInput = document.createElement('input');
+    nameInput.type = 'text';
+    nameInput.value = p.programName || '';
+    nameInput.placeholder = 'Program name';
+    nameInput.setAttribute('data-field', 'programName')
+
+    nameInput.addEventListener('input', () => {
+      p.programName = nameInput.value;
+      markDirtyAndAutosave();
+    });
+
+    // payees textarea
+    const payeesBox = document.createElement('textarea');
+    payeesBox.rows = 3;
+    payeesBox.placeholder = 'Payees (one per line: Name - Amount)';
+    payeesBox.setAttribute('data-field', 'payees')
     payeesBox.value = (p.payees || [])
       .map(pe => `${pe.name || ''} - ${pe.amount ?? ''}`)
-      .join('\n')
+      .join('\n');
 
-    const row = document.createElement('div')
-    row.className = 'inline-row'
+    payeesBox.addEventListener('input', () => {
+      const rawLines = payeesBox.value
+        .split('\n')
+        .map(l => l.trim())
+        .filter(l => l.length > 0);
 
-    const paid = document.createElement('label')
-    paid.className = 'check'
-    const paidCb = document.createElement('input')
-    paidCb.type = 'checkbox'
-    paidCb.checked = !!p.hasBeenPaid
-    paidCb.dataset.field = 'hasBeenPaid'
-    paid.appendChild(paidCb)
-    paid.appendChild(document.createTextNode('Has been paid'))
+      p.payees = rawLines.map(line => {
+        const [nm, amtRaw] = line.split('-').map(s => (s || '').trim());
+        const amt = Number(amtRaw);
+        return { name: nm, amount: Number.isFinite(amt) ? amt : 0 };
+      });
 
-    const report = document.createElement('label')
-    report.className = 'check'
-    const reportCb = document.createElement('input')
-    reportCb.type = 'checkbox'
-    reportCb.checked = !!p.reportSubmitted
-    reportCb.dataset.field = 'reportSubmitted'
-    report.appendChild(reportCb)
-    report.appendChild(document.createTextNode('Report submitted'))
+      markDirtyAndAutosave();
+    });
 
-    const delBtn = document.createElement('button')
-    delBtn.className = 'btn btn-danger'
-    delBtn.textContent = 'Delete Program'
+    // row with checkboxes
+    const row = document.createElement('div');
+    row.className = 'inline-row';
+
+    // Has been paid
+    const paid = document.createElement('label');
+    paid.className = 'check';
+    const paidCb = document.createElement('input');
+    paidCb.type = 'checkbox';
+    paidCb.checked = !!p.hasBeenPaid;
+    paidCb.setAttribute('data-field', 'hasBeenPaid')
+    paidCb.addEventListener('change', () => {
+      p.hasBeenPaid = paidCb.checked;
+      markDirtyAndAutosave();
+    });
+    paid.appendChild(paidCb);
+    paid.appendChild(document.createTextNode('Has been paid'));
+
+    // Report submitted
+    const report = document.createElement('label');
+    report.className = 'check';
+    const reportCb = document.createElement('input');
+    reportCb.type = 'checkbox';
+    reportCb.checked = !!p.reportSubmitted;
+    reportCb.setAttribute('data-field', 'reportSubmitted')
+    reportCb.addEventListener('change', () => {
+      p.reportSubmitted = reportCb.checked;
+      markDirtyAndAutosave();
+    });
+    report.appendChild(reportCb);
+    report.appendChild(document.createTextNode('Report submitted'));
+
+    // Marked for improvement current year
+    const sel = document.createElement('label');
+    sel.className = 'check';
+    const selCb = document.createElement('input');
+    selCb.type = 'checkbox';
+    selCb.checked = !!isSelected;
+
+    sel.appendChild(selCb);
+    sel.appendChild(document.createTextNode('Marked for improvement'));
+
+    selCb.addEventListener('change', () => {
+      if (!progId) {
+        EDIT_showInfo(
+          'Needs a save',
+          'Save this division/program to the database first before marking it for improvement.'
+        );
+        selCb.checked = false;
+        return;
+      }
+      if (!EDIT_currentYear) {
+        EDIT_showInfo(
+          'Set current year',
+          'No current year is set yet on the Schedule page.'
+        );
+        selCb.checked = false;
+        return;
+      }
+
+      EDIT_toggleProgramSelected(progId, selCb.checked);
+
+      if (selCb.checked) {
+        card.classList.add('improvement-selected');
+        badge.style.display = 'inline-block';
+      } else {
+        card.classList.remove('improvement-selected');
+        badge.style.display = 'none';
+      }
+    });
+
+    row.appendChild(paid);
+    row.appendChild(report);
+    row.appendChild(sel);
+
+    // notes
+    const notesBox = document.createElement('textarea');
+    notesBox.rows = 2;
+    notesBox.placeholder = 'Notes';
+    notesBox.setAttribute('data-field', 'notes')
+    notesBox.value = p.notes || '';
+    notesBox.addEventListener('input', () => {
+      p.notes = notesBox.value;
+      markDirtyAndAutosave();
+    });
+
+    // Delete program button
+    const delBtn = document.createElement('button');
+    delBtn.type = 'button';
+    delBtn.className = 'btn btn-danger';
+    delBtn.textContent = 'Delete Program';
     delBtn.addEventListener('click', () => {
-      divRec.programList.splice(idx, 1)
-      EDIT_dirty = true
-      EDIT_renderProgramsEditor(divRec)
-      EDIT_autosaveDraft()
-    })
+      const realIndex = divRec.programList.indexOf(p);
+      if (realIndex !== -1) {
+        divRec.programList.splice(realIndex, 1);
+      }
+      markDirtyAndAutosave();
+      EDIT_renderProgramsEditor(divRec);
+    });
 
-    row.appendChild(paid)
-    row.appendChild(report)
-    row.appendChild(delBtn)
+    // assemble card
+    card.appendChild(EDIT_labelWrap('', nameInput));
+    card.appendChild(EDIT_labelWrap('', payeesBox));
+    card.appendChild(row);
+    card.appendChild(EDIT_labelWrap('Notes', notesBox));
+    card.appendChild(delBtn);
 
-    const notes = document.createElement('textarea')
-    notes.rows = 2
-    notes.placeholder = 'Notes'
-    notes.value = p.notes || ''
-    notes.dataset.field = 'notes'
-
-    const grid = document.createElement('div')
-    grid.className = 'edit-grid'
-    grid.appendChild(EDIT_labelWrap('Program Name', nameInput))
-    grid.appendChild(EDIT_labelWrap('Payees', payeesBox))
-    grid.appendChild(EDIT_labelWrap('', row))
-    grid.appendChild(EDIT_labelWrap('Notes', notes))
-
-    // mark dirty when program name changes
-    const markDirty = () => {
-      EDIT_dirty = true
-      EDIT_applyFieldState(nameInput)
-      debounceSave(EDIT_autosaveDraft)
-    }
-    nameInput.addEventListener('input', markDirty)
-    nameInput.addEventListener('blur', () => EDIT_applyFieldState(nameInput))
-
-    // mark dirty on payees, flags, and notes
-    const markDirtyPayees = () => {
-      EDIT_dirty = true
-      EDIT_applyFieldState(payeesBox)
-      debounceSave(EDIT_autosaveDraft)
-    }
-    ;[payeesBox, paidCb, reportCb, notes].forEach(el => {
-      el.addEventListener('input', markDirtyPayees)
-      el.addEventListener('change', markDirtyPayees)
-    })
-
-    // set initial state
-    EDIT_applyFieldState(nameInput)
-    EDIT_applyFieldState(payeesBox)
-
-    card.appendChild(grid)
-    wrap.appendChild(card)
-  })
-
-  programsMount.appendChild(wrap)
+    programsMount.appendChild(card);
+  });
 }
 
 // fill top header fields with data for this division
@@ -830,14 +1036,18 @@ function EDIT_listenSelection() {
 }
 
 // start up this editor module
-function EDIT_start() {
+async function EDIT_start() {
   EDIT_wireButtons()
   EDIT_listenSelection()
+  await EDIT_loadCurrentYear()
+  await EDIT_loadCurrentSchedule()
 }
 
 // run when DOM is ready
 if (document.readyState === 'loading') {
-  document.addEventListener('DOMContentLoaded', EDIT_start)
+  document.addEventListener('DOMContentLoaded', () => {
+    EDIT_start().catch(err => console.error(err))
+  })
 } else {
-  EDIT_start()
+  EDIT_start().catch(err => console.error(err))
 }

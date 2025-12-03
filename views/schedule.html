@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Program Assessment Schedule | Green River College</title>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <!-- Core libraries -->
+  <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+
+  <!-- Shared base styles + schedule page styles -->
+  <link rel="stylesheet" href="/styles.css" />
+  <link rel="stylesheet" href="/schedule/schedule.css" />
+</head>
+
+<body>
+
+  <!-- -----------------------------------------------------------------------
+       Top Header (same layout style as Dashboard)
+       Shows brand + navigation links
+  ------------------------------------------------------------------------ -->
+  <header class="user-header">
+    <div class="navbar">
+      <div class="brand">
+        <h1 class="brand__title">Green River College</h1>
+      </div>
+
+      <!-- spacer keeps the layout centered -->
+      <div class="header-spacer"></div>
+
+      <!-- Page navigation -->
+      <nav class="navbar-links">
+        <a class="btn btn--ghost" href="/">Dashboard</a>
+        <a class="btn btn--ghost" href="/history.html">History</a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- -----------------------------------------------------------------------
+       Main Schedule Layout
+       The JS script builds:
+         - Columns for each academic year
+         - Rows for divisions/programs
+         - Checkboxes for selected years
+  ------------------------------------------------------------------------ -->
+  <main class="schedule-layout">
+    <section class="schedule-card">
+
+      <!-- Header area: title + control buttons -->
+      <header class="schedule-head">
+        <div>
+          <h2 class="schedule-title">Program Assessment Schedule</h2>
+          <p class="schedule-subtitle">
+            Check the box to mark which programs are selected for each academic year.
+          </p>
+        </div>
+
+        <!-- Buttons for managing academic years -->
+        <div class="schedule-controls">
+          <button id="add-year-btn" class="btn btn-primary" type="button">
+            + Add Year
+          </button>
+
+          <button id="remove-year-btn" class="btn btn-ghost" type="button">
+            − Remove Last Year
+          </button>
+
+          <button id="lock-prev-years-btn" class="btn btn-ghost" type="button">
+            Lock previous years
+          </button>
+        </div>
+      </header>
+
+      <!-- -------------------------------------------------------------------
+           Table Wrapper
+           The JS file (schedule.js) dynamically injects:
+             - Year columns
+             - All program rows
+             - Checkbox states for each (year x program)
+      -------------------------------------------------------------------- -->
+      <div class="schedule-table-wrap">
+        <table id="schedule-table" class="schedule-table">
+          <thead>
+            <tr id="schedule-header-row">
+              <!-- JS inserts academic year columns here -->
+              <th class="sticky-col">Division / Program</th>
+            </tr>
+          </thead>
+
+          <tbody id="schedule-tbody">
+            <!-- JS inserts all rows here -->
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Small note under the table -->
+      <p class="schedule-note">
+        Programs checked in this grid are saved by academic year.  
+        The current year can be edited directly; previous years
+        can be locked or unlocked using the button above.
+      </p>
+
+    </section>
+  </main>
+
+  <!-- Main JS logic for this page -->
+  <script src="/schedule/schedule.js"></script>
+
+</body>
+</html>

@@ -1,6 +1,14 @@
-/* cards.css handles the layout and look of division cards */
+/* ============================================================================
+   cards.css
+   Styles for the Division Dashboard Cards
+   Each division is shown as a card in a responsive grid.
+   ============================================================================ */
 
-/* grid that holds all cards */
+
+/* ============================================================================
+   Grid Layout
+   ============================================================================ */
+
 .cards-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
@@ -8,7 +16,11 @@
   align-content: start;
 }
 
-/* main card box */
+
+/* ============================================================================
+   Main Card Appearance
+   ============================================================================ */
+
 .card {
   position: relative;
   background: radial-gradient(
@@ -31,7 +43,11 @@
     background-position 0.18s ease;
 }
 
-/* moving stripe at top of the card */
+
+/* ============================================================================
+   Moving Accent Stripe
+   ============================================================================ */
+
 .card::before {
   content: "";
   position: absolute;
@@ -41,6 +57,7 @@
   height: 8px;
   border-top-left-radius: 14px;
   border-top-right-radius: 14px;
+
   background: linear-gradient(
     90deg,
     var(--primary),
@@ -52,7 +69,11 @@
   opacity: 0.9;
 }
 
-/* hover and click actions */
+
+/* ============================================================================
+   Hover / Active States
+   ============================================================================ */
+
 .card:hover {
   transform: translateY(-4px);
   box-shadow: 0 14px 36px rgba(0, 0, 0, 0.12);
@@ -63,7 +84,7 @@
   transform: translateY(-1px) scale(0.995);
 }
 
-/* active style set by cards.js */
+/* Applied from cards.js when a card is selected */
 .card.active {
   border-color: rgba(44, 136, 43, 0.45);
   box-shadow: 0 0 0 3px rgba(44, 136, 43, 0.18);
@@ -75,7 +96,8 @@
     #fff;
 }
 
-/* stripe animation */
+
+/* Accent stripe flow animation */
 @keyframes stripeFlow {
   0% {
     background-position: 0% 0;
@@ -85,7 +107,11 @@
   }
 }
 
-/* mobile card size */
+
+/* ============================================================================
+   Mobile Adjustments
+   ============================================================================ */
+
 @media (max-width: 900px) {
   .cards-grid {
     grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));

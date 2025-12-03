@@ -1,0 +1,353 @@
+/* ============================================================================
+   HUD TOOLBOX (Floating Tools Menu)
+   Controls the small toolbox used to Add / Delete / Edit / Save divisions.
+   ============================================================================ */
+
+/* Main HUD container */
+#hud-tool.hud {
+  position: fixed;
+  inset: auto;
+  z-index: 40;
+  font-family: inherit;
+}
+
+.hud-inner {
+  position: relative;
+}
+
+
+/* ============================================================================
+   HUD TOGGLE BUTTON (round green button)
+   ============================================================================ */
+
+.hud-toggle {
+  inline-size: 44px;
+  block-size: 44px;
+  border-radius: 999px;
+  border: none;
+  outline: none;
+
+  background: linear-gradient(135deg, #1f7a3f, #2f9f4a);
+  color: #fff;
+  font-size: 22px;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  cursor: pointer;
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.35);
+}
+
+.hud-toggle:focus-visible {
+  outline: 2px solid #ffffff;
+  outline-offset: 2px;
+}
+
+
+/* ============================================================================
+   HUD PANEL (dark popup)
+   ============================================================================ */
+
+.hud-panel {
+  position: absolute;
+  inset-block-end: 52px;
+  inset-inline-end: 0;
+
+  min-inline-size: 220px;
+  max-inline-size: 260px;
+
+  padding: 10px 12px 12px;
+  border-radius: 14px;
+
+  background: rgba(14, 32, 19, 0.97);
+  color: #f5fff6;
+  backdrop-filter: blur(10px);
+
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.45);
+
+  display: none;
+}
+
+.hud--open .hud-panel {
+  display: block;
+}
+
+
+/* ============================================================================
+   HEADER (title + drag handle + close)
+   ============================================================================ */
+
+.hud-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 6px;
+  margin-block-end: 8px;
+}
+
+.hud-title {
+  font-size: 13px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.hud-drag-handle {
+  border: none;
+  background: transparent;
+  color: #9fc8a5;
+  font-size: 14px;
+  cursor: grab;
+  padding: 2px 4px;
+}
+
+.hud--dragging .hud-drag-handle {
+  cursor: grabbing;
+}
+
+.hud-close {
+  border: none;
+  background: transparent;
+  color: #d9e4dd;
+  font-size: 16px;
+  cursor: pointer;
+  padding: 2px 4px;
+}
+
+
+/* ============================================================================
+   MODE BUTTONS (Add / Delete / Edit / Save)
+   ============================================================================ */
+
+.hud-modes {
+  display: flex;
+  gap: 6px;
+  margin-block-end: 8px;
+}
+
+/* Base HUD button */
+.hud-btn {
+  inline-size: 34px;
+  block-size: 34px;
+  border-radius: 999px;
+
+  border: 1px solid rgba(223, 246, 226, 0.6);
+  background: rgba(38, 83, 49, 0.7);
+
+  color: #f7fff9;
+  font-size: 16px;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  cursor: pointer;
+
+  transition:
+    background 0.16s ease,
+    transform 0.12s ease,
+    box-shadow 0.16s ease,
+    border-color 0.16s ease;
+}
+
+/* Tool-specific colors */
+.hud-btn--add {
+  background: rgba(28, 117, 52, 0.9);
+}
+
+.hud-btn--delete {
+  background: rgba(148, 34, 34, 0.85);
+}
+
+.hud-btn--edit {
+  background: rgba(45, 82, 156, 0.92);
+}
+
+.hud-btn--save {
+  background: rgba(65, 150, 94, 0.95);
+}
+
+/* Hover + active states */
+.hud-btn:hover {
+  transform: translateY(-1px);
+  border-color: #ffffff;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.45);
+}
+
+.hud-btn--active {
+  box-shadow: 0 0 0 2px rgba(232, 255, 236, 0.85);
+}
+
+
+/* ============================================================================
+   Hint text under buttons
+   ============================================================================ */
+
+.hud-hint {
+  font-size: 11px;
+  line-height: 1.4;
+  color: #d4e5d6;
+}
+
+
+/* ============================================================================
+   BODY CURSOR STATES (when a mode is active)
+   ============================================================================ */
+
+body.hud-mode-add {
+  cursor: copy;
+}
+
+body.hud-mode-delete {
+  cursor: not-allowed;
+}
+
+body.hud-mode-edit {
+  cursor: text;
+}
+
+
+/* ============================================================================
+   MOBILE ADJUSTMENTS
+   ============================================================================ */
+
+@media (max-width: 720px) {
+  #hud-tool.hud {
+    inset-inline-end: 12px;
+    inset-block-end: 12px;
+  }
+
+  .hud-panel {
+    min-inline-size: 200px;
+  }
+}
+
+
+/* ============================================================================
+   HUD MODAL (Used for Add/Delete/Rename confirmation)
+   ============================================================================ */
+
+.hud-modal-backdrop {
+  position: fixed;
+  inset: 0;
+
+  background: rgba(3, 14, 7, 0.55);
+  backdrop-filter: blur(4px);
+
+  display: none;
+  align-items: center;
+  justify-content: center;
+
+  z-index: 50;
+}
+
+.hud-modal {
+  inline-size: min(420px, 90vw);
+
+  padding: 16px 18px 14px;
+  border-radius: 14px;
+
+  background: #122319;
+  color: #f3fff6;
+
+  border: 1px solid #2a4b33;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6);
+}
+
+
+/* ============================================================================
+   MODAL HEADER
+   ============================================================================ */
+
+.hud-modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+
+.hud-modal-title {
+  font-size: 15px;
+  font-weight: 600;
+}
+
+.hud-modal-close {
+  border: none;
+  background: transparent;
+  color: #e0eee4;
+  font-size: 18px;
+  cursor: pointer;
+}
+
+
+/* ============================================================================
+   MODAL BODY
+   ============================================================================ */
+
+.hud-modal-body {
+  font-size: 13px;
+  margin-bottom: 10px;
+  color: #d9e7db;
+}
+
+.hud-modal-input {
+  inline-size: 100%;
+  margin-top: 6px;
+
+  padding: 6px 8px;
+  border-radius: 6px;
+
+  background: #0f1a13;
+  border: 1px solid #355945;
+
+  color: #f8fff9;
+  font-size: 13px;
+}
+
+.hud-modal-input::placeholder {
+  color: #8ea597;
+}
+
+
+/* ============================================================================
+   MODAL FOOTER BUTTONS
+   ============================================================================ */
+
+.hud-modal-footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  margin-top: 8px;
+}
+
+.hud-modal-btn {
+  padding: 5px 12px;
+  font-size: 13px;
+
+  border-radius: 999px;
+  cursor: pointer;
+
+  border: 1px solid transparent;
+}
+
+.hud-modal-btn--cancel {
+  background: transparent;
+  color: #e0eee4;
+  border-color: #3e5745;
+}
+
+.hud-modal-btn--primary {
+  background: #2c8c4c;
+  color: #fff;
+  border-color: #3aa35c;
+}
+
+.hud-modal-btn--cancel:hover {
+  border-color: #a8c3b0;
+}
+
+.hud-modal-btn--primary:hover {
+  background: #38a35b;
+}

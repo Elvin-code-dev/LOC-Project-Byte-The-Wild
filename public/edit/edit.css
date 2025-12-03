@@ -1,6 +1,10 @@
-/* styles for the division editor page */
-/* these variables set the main colors and spacing for the editor */
+/* ============================================================================
+   Edit Page Styles (Division Editor)
+   Controls all layout, inputs, program cards, validation modal, and save toast.
+   ============================================================================ */
+
 :root {
+  /* Main color system + radiuses + shadows used across editor */
   --primary: #2d8a31;
   --primary-600: #237126;
   --primary-light: #6ed07a;
@@ -9,122 +13,124 @@
   --muted: #6b786b;
   --line: #e7efe7;
   --danger: #e53e3e;
+
   --radius: 12px;
   --radius-sm: 10px;
+
   --shadow-1: 0 8px 22px rgba(0,0,0,.08);
   --shadow-2: 0 14px 36px rgba(0,0,0,.12);
 }
 
-/* main editor container */
-#division-detail { padding: 16px }
-
-/* top title area inside editor */
-#division-detail .edit-title{
-  margin:0 0 18px;
-  color:var(--primary);
-  font-weight:800;
-  font-size:1.6rem;
-  display:flex;
-  align-items:center;
-  gap:10px;
+/* Main editor wrapping container */
+#division-detail {
+  padding: 16px;
 }
 
-/* badge next to title that shows division name */
-#division-detail .badge{
-  padding:4px 10px;
-  border-radius:999px;
-  background:#e8f7ea;
-  color:#166d1a;
-  font-size:12px;
-  font-weight:700;
+/* Title row: “Editing Division” + badge */
+#division-detail .edit-title {
+  margin: 0 0 18px;
+  color: var(--primary);
+  font-weight: 800;
+  font-size: 1.6rem;
+  display: flex;
+  align-items: center;
+  gap: 10px;
 }
 
-/* main grid layout for input fields */
-#division-detail .edit-grid{
-  display:grid;
-  grid-template-columns:1fr 1fr;
-  gap:16px;
+/* Badge that displays division name */
+#division-detail .badge {
+  padding: 4px 10px;
+  border-radius: 999px;
+  background: #e8f7ea;
+  color: #166d1a;
+  font-size: 12px;
+  font-weight: 700;
 }
 
-/* full row fields span both columns */
-#division-detail .edit-grid .full{ grid-column:1 / -1 }
-
-/* header text above the programs section */
-.section-title{
-  margin:12px 0 10px;
-  padding-top:12px;
-  font-weight:900;
-  color:var(--primary-600);
-  font-size:1.2rem;
-  letter-spacing:.2px;
-  display:flex;
-  align-items:center;
-  gap:10px;
-  position:relative;
+/* Two-column grid for detail inputs */
+#division-detail .edit-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
 }
 
-/* subtle line above the section header */
-.section-title::before{
-  content:"";
-  position:absolute;
-  left:0;
-  top:0;
-  right:0;
-  height:2px;
-  background:linear-gradient(90deg, rgba(45,138,49,.35), rgba(45,138,49,0));
-  border-radius:999px;
+/* Any field marked .full spans full width */
+#division-detail .edit-grid .full {
+  grid-column: 1 / -1;
 }
 
-/* wrap for each input field */
-#division-detail .edit-field{
-  display:flex;
-  flex-direction:column;
-  gap:6px;
+/* Section header (e.g. “Programs & Payees”) */
+.section-title {
+  margin: 12px 0 10px;
+  padding-top: 12px;
+  font-weight: 900;
+  color: var(--primary-600);
+  font-size: 1.2rem;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  position: relative;
 }
 
-#division-detail .edit-field label{
-  font-weight:700;
-  color:#1b2a1c;
+/* Decorative line above section header */
+.section-title::before {
+  content: "";
+  position: absolute;
+  inset-inline: 0;
+  top: 0;
+  height: 2px;
+  background: linear-gradient(90deg, rgba(45,138,49,.35), rgba(45,138,49,0));
+  border-radius: 999px;
 }
 
-/* base styles for all inputs and textareas */
+/* Field wrapper */
+#division-detail .edit-field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+/* Field label */
+#division-detail .edit-field label {
+  font-weight: 700;
+  color: #1b2a1c;
+}
+
+/* Base input + textarea styles */
 #division-detail .edit-field input,
 #division-detail .edit-field textarea,
-#division-detail .edit-field select{
-  width:100%;
-  padding:12px 14px;
-  border:2px solid var(--line);
-  border-radius:var(--radius-sm);
-  background:#fff;
-  color:var(--ink);
-  outline:none;
-  transition:
-    border-color .15s ease,
-    box-shadow .15s ease,
-    background-color .15s ease;
+#division-detail .edit-field select {
+  width: 100%;
+  padding: 12px 14px;
+  border: 2px solid var(--line);
+  border-radius: var(--radius-sm);
+  background: #fff;
+  color: var(--ink);
+  outline: none;
+  transition: border-color .15s, box-shadow .15s, background-color .15s;
 }
 
-/* highlight when typing in a field */
+/* Focus glow when typing */
 #division-detail .edit-field input:focus,
-#division-detail .edit-field textarea:focus{
-  border-color:var(--primary);
-  box-shadow:0 0 0 3px rgba(45,138,49,.14);
+#division-detail .edit-field textarea:focus {
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px rgba(45,138,49,.14);
 }
 
-/* small helper text under fields */
-#division-detail .hint{
-  font-size:12px;
-  color:var(--muted);
+/* Lightweight helper text under fields */
+#division-detail .hint {
+  font-size: 12px;
+  color: var(--muted);
 }
 
-/* error text styling */
-#division-detail .error{
-  color:var(--danger);
-  font-size:12px;
-  display:none;
+/* Error message style */
+#division-detail .error {
+  color: var(--danger);
+  font-size: 12px;
+  display: none;
 }
 
-/* styles for fields that need attention (TBD or empty) */
+/* Highlight fields that are missing info / “TBD” */
 .is-tbd input,
 .is-tbd textarea,
 .is-tbd {
@@ -133,197 +139,263 @@
   background: #fff7f7;
 }
 
-/* styles for fields marked OK */
+/* OK fields get subtle success border */
 .is-ok input,
 .is-ok textarea {
   border-color: rgba(45,138,49,.50);
 }
 
-/* strong flash on manual save */
+/* Flash animation on successful manual save */
 .just-saved-strong {
   animation: savedFlashStrong 2200ms ease-out;
 }
 
+/* Flash animation for search highlight */
+#programsEditor .card.search-highlight {
+  animation: savedFlashStrong 1500ms ease-out;
+}
+
+/* Flash animation keyframes */
 @keyframes savedFlashStrong {
   0%   { box-shadow: 0 0 0 14px rgba(45,138,49,.55); background: #eaffed }
   60%  { box-shadow: 0 0 0 7px rgba(45,138,49,.28) }
   100% { box-shadow: 0 0 0 0 rgba(45,138,49,0); background: transparent }
 }
 
-/* each program card in the editor */
-#programsEditor .card{
-  background:var(--surface);
-  border:1px solid var(--line);
-  border-radius:12px;
-  box-shadow:var(--shadow-1);
-  padding:14px;
+/* Program card container */
+#programsEditor .card {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  box-shadow: var(--shadow-1);
+  padding: 14px;
 }
 
-/* row with checkboxes and delete button */
-#programsEditor .inline-row{
-  display:flex;
-  gap:18px;
-  align-items:center;
-  margin:8px 0;
+/* Row of checkboxes inside program cards */
+#programsEditor .inline-row {
+  display: flex;
+  gap: 18px;
+  align-items: flex-start;
+  margin: 8px 0;
+  flex-wrap: wrap;
 }
 
-/* checkbox label styling */
-#programsEditor .check{
-  display:inline-flex;
-  gap:8px;
-  align-items:center;
-  font-weight:600;
-  color:#122012;
+/* Checkbox wrapper */
+#programsEditor .check {
+  display: inline-flex;
+  gap: 8px;
+  align-items: center;
+  font-weight: 600;
+  color: #122012;
 }
 
-#programsEditor .check input{
-  width:18px;
-  height:18px;
+#programsEditor .check input {
+  width: 18px;
+  height: 18px;
 }
 
-/* editor buttons at the bottom */
-#division-detail .toolbar{
-  margin:12px 0 14px;
-  display:flex;
-  gap:12px;
-  justify-content:flex-end;
-  flex-wrap:wrap;
+/* Bottom toolbar: Save / Reset / etc. */
+#division-detail .toolbar {
+  margin: 12px 0 14px;
+  display: flex;
+  gap: 12px;
+  justify-content: flex-end;
+  flex-wrap: wrap;
 }
 
-#division-detail .btn{
-  border:none;
-  border-radius:12px;
-  padding:12px 18px;
-  font-weight:800;
-  cursor:pointer;
-  outline:none;
-  transition:transform .08s ease, filter .18s ease;
+#division-detail .btn {
+  border: none;
+  border-radius: 12px;
+  padding: 12px 18px;
+  font-weight: 800;
+  cursor: pointer;
+  transition: transform .08s, filter .18s;
 }
 
-/* green save button */
-#division-detail .btn-primary{
-  background:linear-gradient(180deg,var(--primary-light),var(--primary));
-  color:#fff;
-  box-shadow:0 10px 28px rgba(42,162,58,.25);
+/* Save button (green) */
+#division-detail .btn-primary {
+  background: linear-gradient(180deg, var(--primary-light), var(--primary));
+  color: #fff;
+  box-shadow: 0 10px 28px rgba(42,162,58,.25);
 }
 
-#division-detail .btn-primary:hover{
-  transform:translateY(-1px);
-  filter:brightness(1.02);
+#division-detail .btn-primary:hover {
+  transform: translateY(-1px);
+  filter: brightness(1.02);
 }
 
-/* ghost button look */
-#division-detail .btn-ghost{
-  background:#fff;
-  color:var(--primary);
-  border:1px solid rgba(45,138,49,.35);
+/* Ghost button */
+#division-detail .btn-ghost {
+  background: #fff;
+  color: var(--primary);
+  border: 1px solid rgba(45,138,49,.35);
 }
 
-#division-detail .btn-ghost:hover{
-  transform:translateY(-1px);
+#division-detail .btn-ghost:hover {
+  transform: translateY(-1px);
 }
 
-/* red delete program button */
-#division-detail .btn-danger{
-  background:#fff0f0;
-  color:#b42323;
-  border:1px solid #ffd3d3;
+/* Red “Delete program” */
+#division-detail .btn-danger {
+  background: #fff0f0;
+  color: #b42323;
+  border: 1px solid #ffd3d3;
 }
 
-/* toast popup for showing saved messages */
-.toast{
-  position:fixed;
-  right:18px;
-  bottom:18px;
-  background:#fff;
-  color:var(--ink);
-  border:2px solid #c6f0cf;
-  border-left:8px solid var(--primary);
-  border-radius:12px;
-  box-shadow:var(--shadow-2);
-  padding:12px 16px;
-  font-weight:800;
-  display:none;
-  z-index:1000;
-  min-width:220px;
-  text-align:center;
+/* Toast popup (shown after save) */
+.toast {
+  position: fixed;
+  right: 18px;
+  bottom: 18px;
+  background: #fff;
+  color: var(--ink);
+  border: 2px solid #c6f0cf;
+  border-left: 8px solid var(--primary);
+  border-radius: 12px;
+  box-shadow: var(--shadow-2);
+  padding: 12px 16px;
+  font-weight: 800;
+  display: none;
+  z-index: 1000;
+  min-width: 220px;
+  text-align: center;
 }
 
-.toast.ok{ border-color:#bfe8c9 }
-
-/* popup behind validation modal */
-.modal-backdrop{
-  position:fixed;
-  inset:0;
-  background:rgba(0,0,0,.45);
-  display:none;
-  align-items:center;
-  justify-content:center;
-  z-index:10000;
+.toast.ok {
+  border-color: #bfe8c9;
 }
 
-/* modal box for validation messages */
-.modal{
-  width:min(560px, 94vw);
-  background:#fff;
-  border-radius:14px;
-  padding:22px;
-  box-shadow:0 18px 48px rgba(0,0,0,.22);
-  border:1px solid #e9efe9;
+/* Modal backdrop */
+.modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,.45);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  z-index: 10000;
 }
 
-.modal h3{
-  margin:0 0 12px;
-  font-size:1.25rem;
-  font-weight:900;
-  color:#162816;
+/* Modal container */
+.modal {
+  width: min(560px, 94vw);
+  max-height: 80vh;
+  background: #fff;
+  border-radius: 14px;
+  padding: 22px;
+  box-shadow: 0 18px 48px rgba(0,0,0,.22);
+  border: 1px solid #e9efe9;
 }
 
-.modal p{
-  margin:0 0 8px;
-  color:#2b3a2c;
+/* Modal title */
+.modal h3 {
+  margin: 0 0 12px;
+  font-size: 1.25rem;
+  font-weight: 900;
+  color: #162816;
 }
 
-.modal ul{
-  margin:8px 0 16px;
-  padding-left:18px;
+/* Modal body text */
+.modal p {
+  margin: 0 0 8px;
+  color: #2b3a2c;
 }
 
-.modal .actions{
-  display:flex;
-  gap:10px;
-  justify-content:flex-end;
+/* List of missing fields (scrollable if long) */
+.modal ul {
+  margin: 8px 0 16px;
+  padding-left: 18px;
+  max-height: 40vh;
+  overflow-y: auto;
+  text-align: left;
 }
 
-.modal .btn{
-  border:none;
-  border-radius:10px;
-  padding:10px 14px;
-  font-weight:800;
-  cursor:pointer;
+/* Row of action buttons */
+.modal .actions {
+  display: flex;
+  gap: 10px;
+  justify-content: flex-end;
 }
 
-.modal .btn-primary{
-  background:linear-gradient(180deg,#6ed07a,#2d8a31);
-  color:#fff;
+/* Buttons inside modal */
+.modal .btn {
+  border: none;
+  border-radius: 10px;
+  padding: 10px 14px;
+  font-weight: 800;
+  cursor: pointer;
 }
 
-.modal .btn-ghost{
-  background:#fff;
-  border:1px solid #dfe9df;
-  color:#1a2a1a;
+/* “Mark TBD & Save” */
+.modal .btn-primary {
+  background: linear-gradient(180deg, #6ed07a, #2d8a31);
+  color: #fff;
 }
 
-/* mobile layout adjustments */
-@media (max-width:900px){
-  #division-detail .edit-grid{
-    grid-template-columns:1fr;
+/* Cancel button */
+.modal .btn-ghost {
+  background: #fff;
+  border: 1px solid #dfe9df;
+  color: #1a2a1a;
+}
+
+/* Mobile layout adjustments */
+@media (max-width: 900px) {
+  #division-detail .edit-grid {
+    grid-template-columns: 1fr;
   }
-  #division-detail .toolbar{
-    justify-content:stretch;
+
+  #division-detail .toolbar {
+    justify-content: stretch;
   }
-  #division-detail .btn{
-    flex:1 1 auto;
-    text-align:center;
+
+  #division-detail .btn {
+    flex: 1 1 auto;
+    text-align: center;
+  }
+}
+
+/* Marked for improvement highlight */
+#programsEditor .card.improvement-selected {
+  border-color: #f6c453;
+  box-shadow: 0 0 0 4px rgba(246, 196, 83, 0.35);
+  background: #fffaf0;
+}
+
+/* Improvement badge next to title */
+#programsEditor .card .program-improvement-badge {
+  display: none;
+  margin-left: 8px;
+  padding: 2px 8px;
+  border-radius: 999px;
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  background: #f6c453;
+  color: #3a2a00;
+}
+
+/* Show badge only when selected */
+#programsEditor .card.improvement-selected .program-improvement-badge {
+  display: inline-flex;
+}
+
+/* Add Program top bar */
+#programsEditor .programs-topbar {
+  display: flex;
+  justify-content: flex-end;
+  margin: 8px 0 10px;
+}
+
+/* Make “Add Program” button wider */
+#programsEditor .add-program-btn {
+  padding-inline: 24px;
+}
+
+/* Mobile tweaks for checkbox rows */
+@media (max-width: 640px){
+  #programsEditor .inline-row {
+    gap: 10px 16px;
   }
 }

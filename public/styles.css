@@ -277,7 +277,7 @@ table.dataTable {
     .page-layout {
         grid-template-columns: 1fr;
     }
-    /* even if it's "collapsed", still use a single column on small screens */
+    /* even if it's collapsed still use a single column on small screens */
     body.rp-collapsed .page-layout {
         grid-template-columns: 1fr;
     }
@@ -294,11 +294,11 @@ table.dataTable {
 /* tablet layout: left panel + main content side-by-side  Change by A starts her ==========*/
 
 
-/* tablet layout: much slimmer left panel so dashboard has room */
+/* tablet layout: much slimmer left panel so dashboard has more room */
 
 @media (min-width: 700px) and (max-width: 900px) {
     .page-layout {
-        /* left: can shrink to 140px and never take more than ~22% */
+        /* left: can shrink to 140px and never take more than 22 */
         grid-template-columns: 1fr 1fr;
         /* 50/50 split */
         column-gap: 2px;
@@ -364,10 +364,9 @@ table.dataTable {
 /* ===== change by A ends here */
 
 
-/* mobile-friendly tables: clear horizontal scrolling + hint */
+/* mobile-friendly  */
 
 @media (max-width: 700px) {
-    /* make the main table containers horizontally scrollable */
     #final-view .dataTables_wrapper,
     .archives-body,
     #history-table_wrapper {
@@ -375,7 +374,7 @@ table.dataTable {
         overflow-y: hidden;
         -webkit-overflow-scrolling: touch;
         position: relative;
-        /* needed for the hint badge positioning */
+        
     }
     page-layout {
         grid-template-columns: 1fr;
@@ -386,36 +385,14 @@ table.dataTable {
     }
 }
 
-
 /* prevent tables from being squished too small */
 
 #final-view table,
 .archives-table,
 #history-table {
     min-width: 640px;
-    /* adjust if you want a bit wider/narrower */
+    
 }
-
-
-/* subtle swipe hint */
-
-#final-view .dataTables_wrapper::after,
-.archives-body::after,
-#history-table_wrapper::after {
-    content: "Swipe →";
-    position: absolute;
-    top: 6px;
-    right: 8px;
-    padding: 2px 8px;
-    font-size: 11px;
-    color: #4b5c4b;
-    background: rgba(255, 255, 255, 0.92);
-    border-radius: 999px;
-    border: 1px solid rgba(0, 0, 0, 0.06);
-    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.06);
-    pointer-events: none;
-}
-
 
 /* when right panel is collapsed – DESKTOP ONLY */
 
@@ -425,9 +402,25 @@ table.dataTable {
     }
 }
 
-
 /* allow final view table to scroll inside wrapper */
-
 #final-view .dataTables_wrapper {
     overflow: auto;
+}
+
+/* Highlight for programs marked for improvement in current year */
+.card.improvement-selected {
+  border-color: #facc15;
+  box-shadow: 0 0 0 2px #facc15;
+  background: #fefce8;
+}
+
+.program-improvement-badge {
+  display: inline-block;
+  margin-left: 8px;
+  padding: 2px 8px;
+  border-radius: 999px;
+  font-size: 11px;
+  font-weight: 600;
+  background: #facc15;
+  color: #1f2937;
 }

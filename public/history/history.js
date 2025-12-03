@@ -1,7 +1,25 @@
-// history.js builds the history table on the History page
-// it loads the last submissions from the server and shows them using DataTables
+/* ============================================================================
+   history.js
+   Builds the History page table. This page shows all saved submissions
+   (snapshots) for every division, including dean/chair changes and payee totals.
 
-// format a number as dollars
+   Features:
+   • Fetch latest submission records from /api/submissions
+   • Format numbers as dollars
+   • Format timestamps into readable local time
+   • Build table rows dynamically
+   • Apply DataTables for scrolling + sorting
+   ============================================================================ */
+
+
+/* ============================================================================
+   Format helpers
+   ============================================================================ */
+
+/**
+ * Convert a number into currency with commas
+ * Example: 12000 → $12,000
+ */
 function dollar(n) {
   const num = Number(n)
   if (!Number.isFinite(num)) return ''
@@ -12,69 +30,89 @@ function dollar(n) {
   })
 }
 
-// turn a raw date string into something readable
-function formatDate(d) {
-  const date = new Date(d)
+/**
+ * Convert API timestamp → readable date/time
+ * Example: 2024-02-01T18:44:11.000Z → "2/1/2024, 10:44 AM"
+ */
+function formatDate(raw) {
+  const date = new Date(raw)
   if (isNaN(date.getTime())) return ''
   return date.toLocaleString()
 }
 
-// build the HTML table rows for the history page
+
+/* ============================================================================
+   Build the table body
+   ============================================================================ */
+
+/**
+ * Given submission rows from the server, create <tr> rows in the table.
+ * Uses DataTables if available to add scrolling + sorting.
+ */
 function buildHistoryTable(submissions) {
   const tbody = document.querySelector('#history-table tbody')
   if (!tbody) return
 
-  // create one table row for each submission
-  tbody.innerHTML = submissions.map(item => {
-    const savedAt = formatDate(item.created_at)
-    const total = dollar(item.totalAmount || 0)
+  tbody.innerHTML = submissions
+    .map(item => {
+      const savedAt = formatDate(item.created_at)
+      const total = dollar(item.totalAmount || 0)
 
-    // shorten long notes so the table stays clean
-    const notes = (item.notes || '').length > 120
-      ? item.notes.slice(0, 117) + '...'
-      : (item.notes || '')
+      // Shorten notes so table stays clean
+      const rawNotes = item.notes || ''
+      const notes =
+        rawNotes.length > 120
+          ? rawNotes.slice(0, 117) + '...'
+          : rawNotes
 
-    return `
-      <tr>
-        <td>${savedAt}</td>
-        <td>${item.divisionName || ''}</td>
-        <td>${item.dean || ''}</td>
-        <td>${item.chair || ''}</td>
-        <td>${item.pen || ''}</td>
-        <td>${item.loc || ''}</td>
-        <td>${item.programCount || 0}</td>
-        <td>${item.payeeCount || 0}</td>
-        <td>${total}</td>
-        <td>${notes}</td>
-      </tr>
-    `
-  }).join('')
+      return `
+        <tr>
+          <td>${savedAt}</td>
+          <td>${item.divisionName || ''}</td>
+          <td>${item.dean || ''}</td>
+          <td>${item.chair || ''}</td>
+          <td>${item.pen || ''}</td>
+          <td>${item.loc || ''}</td>
+          <td>${item.programCount || 0}</td>
+          <td>${item.payeeCount || 0}</td>
+          <td>${total}</td>
+          <td>${notes}</td>
+        </tr>
+      `
+    })
+    .join('')
 
-  // enhance the table with scrolling and sorting if DataTable is available
+  /* If DataTables is available, enhance table behavior */
   if (window.DataTable) {
-
-    // destroy old table instance if user reloads or returns to the page
+    // Destroy old instance when user revisits the page
     if (window.__historyTableInstance) {
       window.__historyTableInstance.destroy()
     }
 
     window.__historyTableInstance = new DataTable('#history-table', {
-      destroy: true,
+      destroy: true,         // allow re-init
       autoWidth: false,
       scrollX: true,
       scrollY: '60vh',
       scrollCollapse: true,
       pageLength: 25,
-      order: [[0, 'desc']]   // sort by newest first
+      order: [[0, 'desc']]   // sort newest first
     })
   }
 }
 
-// load submissions from the API
+
+/* ============================================================================
+   Fetch submissions from server
+   ============================================================================ */
+
 async function loadHistory() {
   try {
-    const res = await fetch('/api/submissions?limit=200', { cache: 'no-store' })
-    if (!res.ok) throw new Error('bad status')
+    const res = await fetch('/api/submissions?limit=200', {
+      cache: 'no-store'
+    })
+
+    if (!res.ok) throw new Error('Bad server response')
 
     const data = await res.json()
     buildHistoryTable(data)
@@ -84,17 +122,22 @@ async function loadHistory() {
 
     const tbody = document.querySelector('#history-table tbody')
     if (tbody) {
-      tbody.innerHTML = '<tr><td colspan="10">Could not load history</td></tr>'
+      tbody.innerHTML =
+        '<tr><td colspan="10">Could not load history</td></tr>'
     }
   }
 }
 
-// start the history page
+
+/* ============================================================================
+   Initializer
+   ============================================================================ */
+
 function initHistory() {
   loadHistory()
 }
 
-// run when page is ready
+/* Run when DOM is ready */
 if (document.readyState === 'loading') {
   document.addEventListener('DOMContentLoaded', initHistory)
 } else {

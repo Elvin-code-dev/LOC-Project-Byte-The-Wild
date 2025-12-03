@@ -1,23 +1,38 @@
-// cards.js builds the division cards on the dashboard
-// each card is clickable and opens the editor for that division
+/* ============================================================================
+   cards.js
+   Builds the Division Cards on the Dashboard.
 
-// get the container that holds all cards
+   Each card:
+   • Displays a division name
+   • Highlights when selected
+   • Dispatches "division:selected" so edit.js can load the division
+   ============================================================================ */
+
+
+/* ============================================================================
+   Helpers
+   ============================================================================ */
+
+/** Short helper to get the card grid container */
 function getCardsContainer() {
   return document.querySelector('.cards-grid')
 }
 
-// get all card elements
+/** Get all card elements already rendered */
 function getCards() {
   return document.querySelectorAll('.cards-grid .card')
 }
 
-// make one card active and turn off active on others
+/** Apply active style to clicked card */
 function setActiveCard(card) {
   getCards().forEach(c => c.classList.remove('active'))
   card.classList.add('active')
 }
 
-// let the rest of the app know which division was clicked
+/**
+ * Let the rest of the app know a division was chosen.
+ * edit.js listens for this event.
+ */
 function announceSelection(id, name) {
   const detail = {
     id: String(id || '').trim(),
@@ -31,12 +46,20 @@ function announceSelection(id, name) {
   )
 }
 
-// create all the cards on the dashboard
+
+/* ============================================================================
+   Card Rendering
+   ============================================================================ */
+
+/**
+ * Render all division cards on the dashboard grid.
+ * Accepts an array of division objects from the server or window.DIVISIONS.
+ */
 function renderCards(divisions) {
   const box = getCardsContainer()
   if (!box || !Array.isArray(divisions)) return
 
-  // clear old cards
+  // clear any old cards first
   box.innerHTML = ''
 
   const frag = document.createDocumentFragment()
@@ -52,7 +75,7 @@ function renderCards(divisions) {
 
     div.appendChild(title)
 
-    // clicking a card selects the division
+    /** Clicking a card selects the division */
     div.addEventListener('click', () => {
       setActiveCard(div)
       announceSelection(d.id, d.divisionName)
@@ -64,17 +87,25 @@ function renderCards(divisions) {
   box.appendChild(frag)
 }
 
-// allow other scripts to refresh the cards if needed
+// expose to window so other scripts can re-render cards
 window.renderCards = renderCards
 
-// run when page loads
+
+/* ============================================================================
+   Initialization
+   ============================================================================ */
+
+/**
+ * If window.DIVISIONS exists (loaded from server),
+ * build the cards automatically.
+ * Also supports static fallback HTML cards.
+ */
 function initCards() {
-  // if DIVISIONS exists, build cards from it
   if (Array.isArray(window.DIVISIONS)) {
     renderCards(window.DIVISIONS)
   }
 
-  // safety net for static HTML cards
+  // fallback for static <div class="card">
   getCards().forEach(card => {
     card.addEventListener('click', () => {
       setActiveCard(card)
@@ -83,18 +114,16 @@ function initCards() {
         card.getAttribute('data-division-id') ||
         card.textContent.trim()
 
-      const name = (
-        card.querySelector('.card-title')?.textContent ||
-        card.textContent ||
-        ''
-      ).trim()
+      const name =
+        card.querySelector('.card-title')?.textContent?.trim() ||
+        card.textContent.trim()
 
       announceSelection(id, name)
     })
   })
 }
 
-// start when ready
+/* Run when DOM is ready */
 if (document.readyState === 'loading') {
   document.addEventListener('DOMContentLoaded', initCards)
 } else {

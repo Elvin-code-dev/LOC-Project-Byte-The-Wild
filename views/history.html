@@ -1,65 +1,97 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <!-- basic page info -->
+  <!-- -----------------------------------------------------------------------
+       Basic page info
+  ------------------------------------------------------------------------ -->
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>LOC Version History — Green River College</title>
 
-  <!-- small app icon -->
+  <!-- Browser tab icon -->
   <link rel="icon" type="image/png" href="/images/logo.PNG" />
 
-  <!-- libraries for tables and jquery -->
+  <!-- -----------------------------------------------------------------------
+       External libraries (DataTables + jQuery)
+       Used to render the history table interactively
+  ------------------------------------------------------------------------ -->
   <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
-  <link rel="stylesheet" href="https://cdn.datatables.net/2.3.4/css/dataTables.dataTables.min.css" />
+  <link
+    rel="stylesheet"
+    href="https://cdn.datatables.net/2.3.4/css/dataTables.dataTables.min.css"
+  />
   <script src="https://cdn.datatables.net/2.3.4/js/dataTables.min.js"></script>
 
-  <!-- shared styles -->
+  <!-- Shared styling across the app -->
   <link rel="stylesheet" href="/styles.css" />
   <link rel="stylesheet" href="/search/search.css" />
   <link rel="stylesheet" href="/view-archives/view-archives.css" />
 </head>
 
 <body>
-  <!-- top bar with title search and nav -->
+
+  <!-- ======================================================================
+       HEADER — Top navigation and global search
+  ======================================================================= -->
   <header class="user-header">
     <div class="navbar">
+
+      <!-- Brand -->
       <div class="brand">
         <h1 class="brand__title">Green River College</h1>
       </div>
 
-      <!-- search bar used for filtering -->
+      <!-- Search bar for filtering history -->
       <div class="header-search">
-        <input id="global-search" type="search"
-        placeholder="Search versions, programs, contacts..." />
+        <input
+          id="global-search"
+          type="search"
+          placeholder="Search versions, programs, contacts..."
+        />
       </div>
 
-      <!-- go back to dashboard -->
+      <!-- Back to dashboard -->
       <a class="btn btn--ghost" href="/">Dashboard</a>
 
-      <!-- placeholder sign in button -->
+      <!-- Placeholder: future authentication -->
       <button class="btn btn--accent" id="sign-in-btn" type="button">Sign In</button>
     </div>
   </header>
 
-  <!-- page layout for history -->
+  <!-- ======================================================================
+       MAIN PAGE LAYOUT — Single column view
+  ======================================================================= -->
   <main class="page-layout" style="grid-template-columns: 1fr;">
+
     <section class="main-content">
+
+      <!-- Page title -->
       <h2>Version History</h2>
 
-      <!-- table with all saved submissions -->
+      <!-- ---------------------------------------------------------------
+           ARCHIVES SECTION — Table of submissions
+           history.js loads the latest 200 submission records
+      ---------------------------------------------------------------- -->
       <div class="archives-section">
+
+        <!-- Header above the table -->
         <div class="archives-head">
           <h3 class="archives-title">All Saved Changes</h3>
+
           <div class="archives-controls">
-            <span class="archives-pill">Showing latest 200 submissions</span>
+            <span class="archives-pill">
+              Showing latest 200 submissions
+            </span>
           </div>
         </div>
 
+        <!-- Table wrapper -->
         <div class="archives-body">
-          <table id="history-table"
-                 class="display nowrap archives-table"
-                 style="width:100%">
+          <table
+            id="history-table"
+            class="display nowrap archives-table"
+            style="width:100%"
+          >
             <thead>
               <tr>
                 <th>Saved At</th>
@@ -74,17 +106,22 @@
                 <th>Notes</th>
               </tr>
             </thead>
+
             <tbody>
-              <!-- filled by history.js when page loads -->
+              <!-- Filled dynamically by history.js -->
             </tbody>
           </table>
         </div>
       </div>
+
     </section>
   </main>
 
-  <!-- app scripts -->
+  <!-- ======================================================================
+       SCRIPTS — Search + history loader
+  ======================================================================= -->
   <script src="/search/search.js"></script>
   <script src="/history/history.js"></script>
+
 </body>
 </html>
