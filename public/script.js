@@ -28,40 +28,122 @@ async function loadDivisions() {
   return cacheDivisions
 }
 
+// ============================================================================
+//  Load all programs that are selected for improvement in the CURRENT year
+// ============================================================================
+async function loadSelectedProgramsForCurrentYear() {
+  try {
+    const [yearsRes, schedRes] = await Promise.all([
+      fetch('/api/years', { cache: 'no-store' }),
+      fetch('/api/schedule', { cache: 'no-store' })
+    ])
+
+    if (!yearsRes.ok || !schedRes.ok) {
+      console.warn('Could not load years or schedule')
+      return new Set()
+    }
+
+    const years = await yearsRes.json()
+    const schedule = await schedRes.json()
+
+    if (!Array.isArray(years) || !years.length) return new Set()
+
+    // pick current year (is_current = 1). If none, use last year in list
+    let currentYear = years.find(y => y.is_current === 1 || y.is_current === true)
+    if (!currentYear) currentYear = years[years.length - 1]
+
+    const yearId = currentYear && currentYear.id
+    if (!yearId) return new Set()
+
+    const selected = new Set()
+
+    if (Array.isArray(schedule)) {
+      schedule.forEach(row => {
+        const rowYearId = row.academic_year_id
+        const isSelected =
+          row.is_selected === 1 ||
+          row.is_selected === true ||
+          row.is_selected === '1'
+
+        if (rowYearId === yearId && isSelected) {
+          selected.add(row.program_id)
+        }
+      })
+    }
+
+    return selected
+  } catch (err) {
+    console.error('loadSelectedProgramsForCurrentYear error:', err)
+    return new Set()
+  }
+}
+
+
 
 // ============================================================================
-//  DOM READY → Load divisions + refresh UI areas
+//  DOM READY → Load divisions + mark schedule-selected programs
 // ============================================================================
 document.addEventListener('DOMContentLoaded', async () => {
   console.log('Loading divisions…')
 
   const base = await loadDivisions()
-  const divisions = base
+  const divisions = Array.isArray(base) ? base : []
 
-  // Expose globally so other modules can use the list
-  window.DIVISIONS = divisions
-  console.log('DIVISIONS loaded:', divisions)
+  // Get all program_ids that are selected for improvement for the current year
+  const selectedPrograms = await loadSelectedProgramsForCurrentYear()
+
+  // Attach "selectedForImprovement" flag onto each program object
+  const enhancedDivisions = divisions.map(div => {
+    const programs = Array.isArray(div.programList)
+      ? div.programList.map(p => {
+          const hasId = p.id != null
+          const fromSchedule = hasId && selectedPrograms.has(p.id)
+
+          const isMarked =
+            p.selectedForImprovement ||
+            p.improvementSelected ||
+            fromSchedule
+
+          return {
+            ...p,
+            selectedForImprovement: !!isMarked,
+            improvementSelected: !!isMarked
+          }
+        })
+      : div.programList
+
+    return {
+      ...div,
+      programList: programs
+    }
+  })
+
+  // Expose globally so other modules (cards, search, edit) use the enhanced data
+  window.DIVISIONS = enhancedDivisions
+  console.log('DIVISIONS loaded with schedule flags:', enhancedDivisions)
 
   // Update card grid (center panel)
   if (typeof window.renderCards === 'function') {
     console.log('→ renderCards() running…')
-    window.renderCards(divisions)
+    window.renderCards(enhancedDivisions)
   }
 
   // Update left panel division list
   if (typeof window.refreshLeftPanel === 'function') {
     console.log('→ refreshLeftPanel() running…')
-    window.refreshLeftPanel(divisions)
+    window.refreshLeftPanel(enhancedDivisions)
   }
 
   // Prepare global search index
   if (typeof window.LOC_searchInit === 'function') {
     console.log('→ LOC_searchInit() running…')
-    window.LOC_searchInit(divisions)
+    window.LOC_searchInit(enhancedDivisions)
   }
 
-  console.log('UI refreshed with updated divisions.')
+  console.log('UI refreshed with updated divisions + improvement flags.')
 })
+
+
 
 
 // ============================================================================

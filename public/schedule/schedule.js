@@ -270,6 +270,8 @@ function renderSchedule() {
         cb.addEventListener('change', async () => {
           if (!programId || !year.id) return
 
+          program.improvementSelected = cb.checked;
+
           const payload = {
             academic_year_id: year.id,
             program_id: programId,
